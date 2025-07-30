@@ -1,8 +1,15 @@
 import React from 'react'
+import Login from './Pages/Auth/Login'
+import Register from './Pages/Auth/Register'
+import StyleNestHomepage from './Pages/Auth/StyleNestHomePage'
 
 const App = () => {
   return (
-    <div className='bg-red-500'>App</div>
+    <div>
+      <Register/>
+      <Login/>
+      <StyleNestHomepage/>
+    </div>
   )
 }
 
