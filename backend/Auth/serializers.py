@@ -9,15 +9,23 @@ from Auth.models import CustomUser
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(write_only=True)  
+    confrimpassword = serializers.CharField(write_only=True)  
     class Meta:
         model = CustomUser
-        fields = ['username','email','password','password2']       
+        fields = ['username','email','password','confirmpassword']  
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
+   
     
     def validate(self,data):
-        if data['password'] != data['password2']:
+        if data['password'] != data['confirmpassword']:
             raise serializers.ValidationError('passwords do not match...')
         return data  
+    
+    def create(self, validated_data):
+        validated_data.pop('confirmpassword') 
+        return CustomUser.objects.create_user(**validated_data) 
          
 
 # ---------------------------- login serializer ---------------------------

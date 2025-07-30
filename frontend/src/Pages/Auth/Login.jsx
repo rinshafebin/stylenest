@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
+import axiosInstance from '../../api/axios';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
+import {useNavigate} from 'react-router-dom'
+
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const[email,setEmail] = useState('');
+  const [password,setPassword] = useState('')
+  const [eror,setEror]=useState('')
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-100 flex items-center justify-center p-4">

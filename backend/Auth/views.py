@@ -28,34 +28,30 @@ class UserRegistration(APIView):
     def post(self,request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
-            validated_data =serializer.validated_data
-            validated_data.pop('password2')
+            # validated_data =serializer.validated_data
+            # validated_data.pop('password2')
             
-            user = CustomUser.objects.create(
-                username =validated_data['username'],
-                email = validated_data['email'],
-                password = make_password(validated_data['password']),
-                is_active = False
-            )
+            # user = CustomUser.objects.create(
+            #     username =validated_data['username'],
+            #     email = validated_data['email'],
+            #     password = make_password(validated_data['password']),
+            #     is_active = False
+            # )
             
-            # user = serializer.save()
-            # user.is_active = False
-            # user.save()
-                      
-            current_site = get_current_site(request)
-            uid = urlsafe_base64_encode(force_bytes(user.pk)) 
-            token = default_token_generator.make_token(user)
-            verification_link = f"http://{current_site.domain}{reverse('emailverify', kwargs={'uidb64':uid,'token':token})}"
+            serializer.save()
             
-            subject = 'Activate Your Account'
-            message = f'hi{user.username},\nPlease click the link below to verify your email and activate your account : \n{verification_link}'
-            from_email = settings.DEFAULT_FROM_EMAIL
-            recipient_list = [user.email]
-            send_mail(subject,message,from_email,recipient_list,fail_silently = False)
-            # //celery server
-
+            # current_site = get_current_site(request)
+            # uid = urlsafe_base64_encode(force_bytes(user.pk)) 
+            # token = default_token_generator.make_token(user)
+            # verification_link = f"http://{current_site.domain}{reverse('emailverify', kwargs={'uidb64':uid,'token':token})}"
             
-                                                        
+            # subject = 'Activate Your Account'
+            # message = f'hi{user.username},\nPlease click the link below to verify your email and activate your account : \n{verification_link}'
+            # from_email = settings.DEFAULT_FROM_EMAIL
+            # recipient_list = [user.email]
+            # send_mail(subject,message,from_email,recipient_list,fail_silently = False)
+            # # //celery server
+                                                                  
             return Response({'message':'user created succesfully ,please check your mail to verify your account'},status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
@@ -64,21 +60,21 @@ class UserRegistration(APIView):
 
 
 
-class EmailVerify(APIView):
-    def get(self,request,uidb64,token):
-        try:
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = get_object_or_404(CustomUser,pk=uid)
-        except(CustomUser.DoesNotExist):
-            user = None
+# class EmailVerify(APIView):
+#     def get(self,request,uidb64,token):
+#         try:
+#             uid = force_str(urlsafe_base64_decode(uidb64))
+#             user = get_object_or_404(CustomUser,pk=uid)
+#         except(CustomUser.DoesNotExist):
+#             user = None
             
-        if user and default_token_generator.check_token(user,token):
-            user.is_active = True
-            user.save()
+#         if user and default_token_generator.check_token(user,token):
+#             user.is_active = True
+#             user.save()
             
-            return Response({'message': 'Email verified successfully'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': 'Invalid or expired token.'}, status=status.HTTP_400_BAD_REQUEST)
+#             return Response({'message': 'Email verified successfully'}, status=status.HTTP_200_OK)
+#         else:
+#             return Response({'error': 'Invalid or expired token.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
