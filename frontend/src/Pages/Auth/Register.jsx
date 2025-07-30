@@ -6,22 +6,16 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 flex items-center justify-center p-4">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-emerald-400 to-green-600 rounded-full opacity-10 blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-teal-400 to-cyan-600 rounded-full opacity-10 blur-3xl"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-rose-400 to-pink-600 rounded-full opacity-10 blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-pink-400 to-rose-600 rounded-full opacity-10 blur-3xl"></div>
       </div>
 
       <div className="relative w-full max-w-md">
-        {/* Main form container */}
         <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-8">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              {/* <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                <div className="w-4 h-4 bg-gradient-to-r from-emerald-600 to-teal-600 rounded"></div>
-              </div> */}
-            </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               Create account
             </h1>
@@ -31,7 +25,6 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-6">
-            {/* Name field */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 block">
                 Full Name
@@ -43,12 +36,11 @@ export default function RegisterPage() {
                 <input
                   type="text"
                   placeholder="Enter your full name"
-                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 bg-gray-50/50 hover:bg-white focus:bg-white"
+                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all duration-200 bg-gray-50/50 hover:bg-white focus:bg-white"
                 />
               </div>
             </div>
 
-            {/* Email field */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 block">
                 Email Address
@@ -60,12 +52,11 @@ export default function RegisterPage() {
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 bg-gray-50/50 hover:bg-white focus:bg-white"
+                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all duration-200 bg-gray-50/50 hover:bg-white focus:bg-white"
                 />
               </div>
             </div>
 
-            {/* Password field */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 block">
                 Password
@@ -77,7 +68,7 @@ export default function RegisterPage() {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
-                  className="w-full pl-12 pr-12 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 bg-gray-50/50 hover:bg-white focus:bg-white"
+                  className="w-full pl-12 pr-12 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all duration-200 bg-gray-50/50 hover:bg-white focus:bg-white"
                 />
                 <button
                   type="button"
@@ -89,7 +80,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Confirm Password field */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 block">
                 Confirm Password
@@ -101,7 +91,7 @@ export default function RegisterPage() {
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm your password"
-                  className="w-full pl-12 pr-12 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 bg-gray-50/50 hover:bg-white focus:bg-white"
+                  className="w-full pl-12 pr-12 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all duration-200 bg-gray-50/50 hover:bg-white focus:bg-white"
                 />
                 <button
                   type="button"
@@ -113,29 +103,9 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Terms agreement */}
-            <div className="flex items-start space-x-3">
-              <input
-                id="terms"
-                type="checkbox"
-                className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded mt-0.5"
-              />
-              <label htmlFor="terms" className="text-sm text-gray-600">
-                I agree to the{' '}
-                <button type="button" className="text-emerald-600 hover:text-emerald-500 font-medium">
-                  Terms of Service
-                </button>{' '}
-                and{' '}
-                <button type="button" className="text-emerald-600 hover:text-emerald-500 font-medium">
-                  Privacy Policy
-                </button>
-              </label>
-            </div>
-
-            {/* Submit button */}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-emerald-700 hover:to-teal-700 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl group"
+              className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 px-6 rounded-xl font-semibold hover:from-rose-600 hover:to-pink-600 focus:ring-2 focus:ring-rose-400 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl group"
             >
               <div className="flex items-center justify-center space-x-2">
                 <span>Create Account</span>
@@ -144,15 +114,14 @@ export default function RegisterPage() {
             </button>
           </div>
 
-          {/* Footer text */}
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-600">
               Already have an account? {' '}
               <button
                 type="button"
-                className="font-semibold text-emerald-600 hover:text-emerald-500 transition-colors"
+                className="font-semibold text-rose-600 hover:text-pink-500 transition-colors"
               >
-                Sign in here
+                Login in here
               </button>
             </p>
           </div>
