@@ -9,7 +9,7 @@ from Auth.models import CustomUser
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    confrimpassword = serializers.CharField(write_only=True)  
+    confirmpassword = serializers.CharField(write_only=True)  
     class Meta:
         model = CustomUser
         fields = ['username','email','password','confirmpassword']  

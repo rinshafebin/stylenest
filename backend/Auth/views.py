@@ -26,6 +26,7 @@ from django.contrib.auth.hashers import make_password
 
 class UserRegistration(APIView):
     def post(self,request):
+        print("Registration endpoint hit")
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             # validated_data =serializer.validated_data

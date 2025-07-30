@@ -11,6 +11,25 @@ export default function LoginPage() {
   const [eror,setEror]=useState('')
   const navigate = useNavigate();
 
+  const handleSubmit= async(e)=>{
+    e.preventDefault();
+    console.log('submitted')
+    setEror('')
+    try{
+      const response=await axiosInstance.post('auth/login',{
+        email,
+        password,
+      });
+      const{access,refresh}=response.data;
+      localStorage.setItem('access_token',access)
+      localStorage.setItem('refresh_token',refresh)
+      navigate('/')
+    }catch(err){
+      console.error(err)
+      setEror('invalid credentials,please try again .')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-100 flex items-center justify-center p-4">
       {/* Background decorative elements */}
@@ -26,7 +45,7 @@ export default function LoginPage() {
             <p className="text-gray-600">Sign in to your account to continue</p>
           </div>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 block">Email Address</label>
               <div className="relative">
@@ -35,9 +54,11 @@ export default function LoginPage() {
                 </div>
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e)=>setEmail(e.target.value)}
                   placeholder="Enter your email"
                   className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white focus:bg-white"
-                />
+                required/>
               </div>
             </div>
 
@@ -49,9 +70,11 @@ export default function LoginPage() {
                 </div>
                 <input
                   type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e)=>setPassword(e.target.value)}
                   placeholder="Enter your password"
                   className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white focus:bg-white"
-                />
+                required/>
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}

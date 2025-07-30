@@ -5,17 +5,23 @@ import StyleNestHomepage from './Pages/Auth/StyleNestHomePage'
 import Navbar from './Components/Common/Navbar'
 import Footer from './Components/Common/Footer'
 import Category from './Pages/Auth/Category'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 const App = () => {
   return (
-    <div>
-      <Register/>
-      <Login/>
-      <Navbar />
-      <StyleNestHomepage/>
-      <Footer/>
-      <Category/>
-    </div>
+    <BrowserRouter>
+      <div className="flex flex-col min-h-screen">
+        <div className="flex-grow">
+          <Routes>
+            <Route path='/' element={<Register/>}/>
+            <Route path='/login' element={<Login/>}/>
+
+          </Routes>
+        </div>
+
+      </div >
+    </BrowserRouter >
+
   )
 }
 
