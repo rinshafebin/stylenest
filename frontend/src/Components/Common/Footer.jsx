@@ -37,7 +37,6 @@ const Footer = () => {
               <h3 className="font-semibold mb-4 text-pink-600">Support</h3>
               <div className="space-y-2 text-gray-500 text-sm sm:text-base">
                 <p className="hover:text-pink-500 cursor-pointer transition-colors">Contact Us</p>
-                <p className="hover:text-pink-500 cursor-pointer transition-colors">Size Guide</p>
                 <p className="hover:text-pink-500 cursor-pointer transition-colors">Shipping Info</p>
                 <p className="hover:text-pink-500 cursor-pointer transition-colors">Returns</p>
               </div>
@@ -48,7 +47,6 @@ const Footer = () => {
               <h3 className="font-semibold mb-4 text-pink-600">Company</h3>
               <div className="space-y-2 text-gray-500 text-sm sm:text-base">
                 <p className="hover:text-pink-500 cursor-pointer transition-colors">About Us</p>
-                <p className="hover:text-pink-500 cursor-pointer transition-colors">Careers</p>
                 <p className="hover:text-pink-500 cursor-pointer transition-colors">Privacy Policy</p>
                 <p className="hover:text-pink-500 cursor-pointer transition-colors">Terms of Service</p>
               </div>
