@@ -16,7 +16,7 @@ export default function LoginPage() {
     console.log('submitted')
     setEror('')
     try{
-      const response=await axiosInstance.post('auth/login',{
+      const response=await axiosInstance.post('auth/login/',{
         email,
         password,
       });
@@ -111,9 +111,10 @@ export default function LoginPage() {
               Don’t have an account?{' '}
               <button
                 type="button"
+                onClick={()=>navigate('/register')}
                 className="font-semibold text-rose-600 hover:text-rose-500 transition-colors"
               >
-                Sign up here
+                Create an account
               </button>
             </p>
           </div>

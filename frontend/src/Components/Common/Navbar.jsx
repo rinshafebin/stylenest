@@ -1,29 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { Search, User, Heart, ShoppingCart, X, Menu } from 'lucide-react';
+import {Link, useNavigate} from 'react-router-dom'
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const navigate =useNavigate()
 
-  useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+  useEffect(()=>{
+    const accessToken=localStorage.getItem('access_token')
+    const storedUser=localStorage.getItem('user')
+    if (accessToken&&storedUser){
+      setUser(JSON.parse(storedUser))
     }
-  }, []);
+  },[])
 
-  const handleLogin = () => {
-    // This should be replaced with actual login logic
-    const dummyUser = { name: 'Pathu' };
-    setUser(dummyUser);
-    localStorage.setItem('user', JSON.stringify(dummyUser));
-  };
+  const handleLogout=()=>{
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('refresh_token')
+    localStorage.removeItem('user')
+    setUser(null)
+    navigate('/login')
+  }
 
-  const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-    // Optionally: notify backend about logout
-  };
+  const handleLogin=()=>{
+    navigate('/login')
+  }
+
+  const handleRegister=()=>{
+    navigate('/register')
+  }
+
 
   return (
     <header className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
@@ -39,7 +46,7 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            {['New Arrivals', 'Women', 'Men', 'Kids', 'Accessories'].map((item) => (
+            {['New Arrivals', 'Women', 'Men', 'Kids'].map((item) => (
               <a
                 key={item}
                 href="#"
@@ -48,9 +55,6 @@ const Navbar = () => {
                 {item}
               </a>
             ))}
-            <a href="#" className="text-red-600 hover:text-red-700 transition-colors font-medium">
-              Sale
-            </a>
           </nav>
 
           {/* Right Side Actions */}
@@ -84,12 +88,13 @@ const Navbar = () => {
                 >
                   Login
                 </button>
-                <a
-                  href="/register"
+
+                <Link
+                  to="/register"
                   className="text-black hover:text-rose-700 text-sm font-medium"
                 >
                   Register
-                </a>
+                </Link>
               </>
             )}
 
@@ -143,12 +148,12 @@ const Navbar = () => {
                     >
                       Login
                     </button>
-                    <a
-                      href="/register"
+                    <Link
+                      to="/register"
                       className="text-black hover:text-rose-700 text-sm font-medium"
                     >
                       Register
-                    </a>
+                    </Link>
                   </>
                 )}
               </div>

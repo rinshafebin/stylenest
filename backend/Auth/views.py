@@ -86,6 +86,7 @@ class UserRegistration(APIView):
 
 class Login(APIView):
     def post(self,request):
+        print('data',request.data)
         serilaizer = LoginSerializer(data=request.data)
         if serilaizer.is_valid():
             user = serilaizer.validated_data['user']

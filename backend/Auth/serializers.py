@@ -9,22 +9,17 @@ from Auth.models import CustomUser
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    confirmpassword = serializers.CharField(write_only=True)  
     class Meta:
         model = CustomUser
-        fields = ['username','email','password','confirmpassword']  
+        fields = ['username','email','password']  
         extra_kwargs = {
             'password': {'write_only': True},
         }
    
     
-    def validate(self,data):
-        if data['password'] != data['confirmpassword']:
-            raise serializers.ValidationError('passwords do not match...')
-        return data  
+
     
     def create(self, validated_data):
-        validated_data.pop('confirmpassword') 
         return CustomUser.objects.create_user(**validated_data) 
          
 
@@ -42,7 +37,7 @@ class LoginSerializer(serializers.ModelSerializer):
     
     def validate(self,data):
         user =authenticate(email=data['email'],password =data['password'])
-        if user and user.is_active:
+        if user :
             return {'user':user}
         raise serializers.ValidationError('invalid email or password')
 
