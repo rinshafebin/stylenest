@@ -1,48 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { Search, User, Heart, ShoppingCart, X, Menu } from 'lucide-react';
-import {Link, useNavigate} from 'react-router-dom'
+import { Search, User, Heart, ShoppingBag, X, Menu } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const navigate =useNavigate()
+  const navigate = useNavigate();
 
-  useEffect(()=>{
-    const accessToken=localStorage.getItem('access_token')
-    const storedUser=localStorage.getItem('user')
-    if (accessToken&&storedUser){
-      setUser(JSON.parse(storedUser))
+  useEffect(() => {
+    const accessToken = localStorage.getItem('access_token');
+    const storedUser = localStorage.getItem('user');
+    if (accessToken && storedUser) {
+      setUser(JSON.parse(storedUser));
     }
-  },[])
+  }, []);
 
-  const handleLogout=()=>{
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
-    localStorage.removeItem('user')
-    setUser(null)
-    navigate('/login')
-  }
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
+    setUser(null);
+    navigate('/login');
+  };
 
-  const handleLogin=()=>{
-    navigate('/login')
-  }
+  const handleLogin = () => {
+    navigate('/login');
+  };
 
-  const handleRegister=()=>{
-    navigate('/register')
-  }
-
+  const handleRegister = () => {
+    navigate('/register');
+  };
 
   return (
     <header className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">SN</span>
             </div>
             <span className="text-xl font-bold text-black">StyleNest</span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
@@ -63,7 +62,7 @@ const Navbar = () => {
             <User className="w-5 h-5 text-black cursor-pointer hover:text-rose-700 transition-colors hidden sm:block" />
             <Heart className="w-5 h-5 text-black cursor-pointer hover:text-rose-700 transition-colors" />
             <div className="relative">
-              <ShoppingCart className="w-5 h-5 text-black cursor-pointer hover:text-rose-700 transition-colors" />
+              <ShoppingBag className="w-5 h-5 text-black cursor-pointer hover:text-rose-700 transition-colors" />
               <span className="absolute -top-2 -right-2 bg-rose-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 3
               </span>
@@ -148,12 +147,12 @@ const Navbar = () => {
                     >
                       Login
                     </button>
-                    <Link
-                      to="/register"
+                    <button
+                      onClick={handleRegister}
                       className="text-black hover:text-rose-700 text-sm font-medium"
                     >
                       Register
-                    </Link>
+                    </button>
                   </>
                 )}
               </div>

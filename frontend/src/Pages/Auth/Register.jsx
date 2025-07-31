@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import axiosInstance from '../../api/axios'
+import { useNavigate } from 'react-router-dom';
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -138,9 +140,13 @@ export default function RegisterPage() {
 
         <p className="text-sm text-center text-gray-600">
           Already have an account?{' '}
-          <a href="/login" className="text-pink-600 font-medium hover:underline">
+          <button
+            type="button"
+            onClick={() => navigate('/login')}
+            className="font-semibold text-rose-600 hover:text-rose-500 transition-colors"
+          >
             Log in here
-          </a>
+          </button>
         </p>
       </form>
     </div>
