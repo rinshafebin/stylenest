@@ -15,7 +15,7 @@ export default function Homepage() {
             <div>
               <h1 className="text-5xl font-bold text-black mb-4">
                 Style Your{' '}
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-500">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-500">
                   Nest
                 </span>
               </h1>
@@ -68,15 +68,17 @@ export default function Homepage() {
         </div>
       </section>
 
-
       {/* Categories Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-black mb-4">Shop by Category</h2>
+            <h2 className="text-3xl font-bold text-black mb-4">
+              Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-500">Categories</span>
+            </h2>
             <p className="text-gray-600">Find the perfect style for everyone in your family</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Women */}
             <div className="group cursor-pointer">
               <div className="bg-gradient-to-br from-rose-100 to-pink-100 rounded-2xl p-8 h-64 flex items-center justify-center mb-4 group-hover:shadow-lg transition-shadow">
                 <div className="text-center">
@@ -89,6 +91,7 @@ export default function Homepage() {
                 <p className="text-gray-600">Elegant and sophisticated styles</p>
               </div>
             </div>
+            {/* Men */}
             <div className="group cursor-pointer">
               <div className="bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl p-8 h-64 flex items-center justify-center mb-4 group-hover:shadow-lg transition-shadow">
                 <div className="text-center">
@@ -101,6 +104,7 @@ export default function Homepage() {
                 <p className="text-gray-600">Classic and contemporary fashion</p>
               </div>
             </div>
+            {/* Kids */}
             <div className="group cursor-pointer">
               <div className="bg-gradient-to-br from-yellow-100 to-orange-100 rounded-2xl p-8 h-64 flex items-center justify-center mb-4 group-hover:shadow-lg transition-shadow">
                 <div className="text-center">
@@ -116,19 +120,19 @@ export default function Homepage() {
           </div>
         </div>
       </section>
+
       {/* Featured Products */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-black mb-4">Featured Products</h2>
+            <h2 className="text-3xl font-bold text-black mb-4">
+              New <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-500"> Arrivals</span>
+            </h2>
             <p className="text-gray-600">Discover our most popular items</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[1, 2, 3, 4].map((item) => (
-              <div
-                key={item}
-                className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow group"
-              >
+              <div key={item} className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow group">
                 <div className="relative">
                   <div className="w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-2xl"></div>
                   <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
@@ -161,12 +165,13 @@ export default function Homepage() {
         </div>
       </section>
 
-
-      {/* Why Choose Us */}
+      {/* Why Choose Us
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-black mb-4">Why Choose StyleNest?</h2>
+            <h2 className="text-3xl font-bold text-black mb-4">
+              Why Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-500">StyleNest?</span>
+            </h2>
             <p className="text-gray-600">We're committed to providing the best shopping experience</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -200,10 +205,9 @@ export default function Homepage() {
             </div>
           </div>
         </div>
-      </section>
-      <Footer/>
+      </section> */}
+
+      <Footer />
     </div>
-    
   );
 }
-

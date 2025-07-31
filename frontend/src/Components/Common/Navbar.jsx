@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Search, User, Heart, ShoppingBag, X, Menu } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate,useLocation } from 'react-router-dom';
 
 const Navbar = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation()
 
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token');
@@ -13,23 +13,17 @@ const Navbar = () => {
     if (accessToken && storedUser) {
       setUser(JSON.parse(storedUser));
     }
-  }, []);
+  }, [location]);
 
   const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user');
-    setUser(null);
-    navigate('/login');
+    navigate('/logout');
   };
+
 
   const handleLogin = () => {
     navigate('/login');
   };
 
-  const handleRegister = () => {
-    navigate('/register');
-  };
 
   return (
     <header className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
@@ -88,77 +82,19 @@ const Navbar = () => {
                   Login
                 </button>
 
-                <Link
+                {/* <Link
                   to="/register"
                   className="text-black hover:text-rose-700 text-sm font-medium"
                 >
                   Register
-                </Link>
+                </Link> */}
               </>
             )}
 
-            {/* Hamburger for mobile */}
-            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden">
-              {isMobileMenuOpen ? (
-                <X className="w-5 h-5 text-black" />
-              ) : (
-                <Menu className="w-5 h-5 text-black" />
-              )}
-            </button>
+            
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-4 border-t border-gray-100">
-            <nav className="flex flex-col space-y-4 pt-4">
-              {['New Arrivals', 'Women', 'Men', 'Kids', 'Accessories'].map((item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="text-black hover:text-rose-700 transition-colors font-medium"
-                >
-                  {item}
-                </a>
-              ))}
-              <a href="#" className="text-red-600 hover:text-red-700 transition-colors font-medium">
-                Sale
-              </a>
-              <div className="flex items-center space-x-4 pt-2">
-                <Search className="w-5 h-5 text-black hover:text-rose-700 transition-colors" />
-                <User className="w-5 h-5 text-black hover:text-rose-700 transition-colors" />
-              </div>
-              <div className="pt-4 flex gap-4">
-                {user ? (
-                  <>
-                    <span className="text-black text-sm">Hi, {user.name}</span>
-                    <button
-                      onClick={handleLogout}
-                      className="text-black hover:text-red-600 text-sm font-medium"
-                    >
-                      Logout
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      onClick={handleLogin}
-                      className="text-black hover:text-rose-700 text-sm font-medium"
-                    >
-                      Login
-                    </button>
-                    <button
-                      onClick={handleRegister}
-                      className="text-black hover:text-rose-700 text-sm font-medium"
-                    >
-                      Register
-                    </button>
-                  </>
-                )}
-              </div>
-            </nav>
-          </div>
-        )}
       </div>
     </header>
   );

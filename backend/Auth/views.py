@@ -116,14 +116,10 @@ class ChangePassword(APIView):
             new_password = serializer.validated_data['new_password']
             
             if not user.check_password(old_password):
-                return Response({'error':'old password is correct'},status=status.HTTP_200_OK)
-            
-            hashed_password = make_password(new_password)
-            CustomUser.objects.filter(pk=user.pk).update(password = hashed_password)
-            
-            
-            # user.set_password(new_password)
-            # user.save()
+                return Response({'error':'old password is incorrect'},status=status.HTTP_400_BAD_REQUEST)
+             
+            user.set_password(new_password)
+            user.save()
             
             return Response({'message':'Password Changed succesfully '},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
@@ -133,63 +129,63 @@ class ChangePassword(APIView):
 
 # --------------------------------- reset password -------------------------------------
 
-class ResetPassword(APIView):
+# class ResetPassword(APIView):
     
-    def post(self,request):
-        email = request.data.get('email')
-        if not email:
-            return Response({'error':'email is required'},status=status.HTTP_400_BAD_REQUEST)
+#     def post(self,request):
+#         email = request.data.get('email')
+#         if not email:
+#             return Response({'error':'email is required'},status=status.HTTP_400_BAD_REQUEST)
         
-        try :
-            user =CustomUser.objects.get(email=email)
-        except CustomUser.DoesNotExist :
-            return Response({'error':'user not found'},status=status.HTTP_400_BAD_REQUEST)
+#         try :
+#             user =CustomUser.objects.get(email=email)
+#         except CustomUser.DoesNotExist :
+#             return Response({'error':'user not found'},status=status.HTTP_400_BAD_REQUEST)
         
         
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = default_token_generator.make_token(user)
+#         uid = urlsafe_base64_encode(force_bytes(user.pk))
+#         token = default_token_generator.make_token(user)
         
-        current_site = get_current_site(request)
-        reset_link = f"http://{current_site.domain}/auth/resetpassword/{uid}/{token}/"
+#         current_site = get_current_site(request)
+#         reset_link = f"http://{current_site.domain}/auth/resetpassword/{uid}/{token}/"
         
-        send_mail(
-            subject='Reset Your Password',
-            message=f"Click the link below to reset your password:\n{reset_link}",
-            from_email='admin@myshop.com',
-            recipient_list=[user.email],
-        )
-        return Response({'message': 'Password reset link sent to your email'}, status=status.HTTP_200_OK)
+#         send_mail(
+#             subject='Reset Your Password',
+#             message=f"Click the link below to reset your password:\n{reset_link}",
+#             from_email='admin@myshop.com',
+#             recipient_list=[user.email],
+#         )
+#         return Response({'message': 'Password reset link sent to your email'}, status=status.HTTP_200_OK)
 
 
 
 
 # --------------------------------- setting a new password ----------------------------------
 
-class ResetPasswordview(APIView):
+# class ResetPasswordview(APIView):
     
-    def post(self,request,uidb64,token):
-        try :
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = CustomUser.objects.get(pk=uid)
-        except CustomUser.DoesNotExist:
-            return Response({'error':'user not found '},status=status.HTTP_400_BAD_REQUEST)
+#     def post(self,request,uidb64,token):
+#         try :
+#             uid = force_str(urlsafe_base64_decode(uidb64))
+#             user = CustomUser.objects.get(pk=uid)
+#         except CustomUser.DoesNotExist:
+#             return Response({'error':'user not found '},status=status.HTTP_400_BAD_REQUEST)
         
-        if not default_token_generator.check_token(user,token):
-            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        
-        new_password = request.data.get('new_password')
-        if not new_password:
-            return Response({'error':'password is required '},status=status.HTTP_400_BAD_REQUEST)
-        
-        hashed_password = make_password(new_password)
-        CustomUser.objects.filter(pk=user.pk).update(password=hashed_password)
+#         if not default_token_generator.check_token(user,token):
+#             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
         
         
+#         new_password = request.data.get('new_password')
+#         if not new_password:
+#             return Response({'error':'password is required '},status=status.HTTP_400_BAD_REQUEST)
         
-        # user.set_password(new_password)
-        # user.save()
-        return Response({'message': 'Password has been reset successfully'}, status=status.HTTP_200_OK)
+#         hashed_password = make_password(new_password)
+#         CustomUser.objects.filter(pk=user.pk).update(password=hashed_password)
+        
+        
+        
+#         # user.set_password(new_password)
+#         # user.save()
+#         return Response({'message': 'Password has been reset successfully'}, status=status.HTTP_200_OK)
 
 
 

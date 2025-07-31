@@ -4,7 +4,7 @@ import Register from './Pages/Auth/Register'
 import Homepage from './Pages/Home/HomePage'
 import Navbar from './Components/Common/Navbar'
 import Footer from './Components/Common/Footer'
-import Category from './Pages/Auth/Category'
+import ChangePassword from './Pages/Auth/ChangePassword'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 const App = () => {
@@ -16,6 +16,7 @@ const App = () => {
             <Route path='/' element={<Homepage/>} />
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={< Register />} />
+            <Route path='/change-password' element={< ChangePassword/>}/>
 
           </Routes>
         </div>
