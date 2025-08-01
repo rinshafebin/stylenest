@@ -19,7 +19,12 @@ const Cart = () => {
     fetchCart();
   }, []);
 
-  
+  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const shipping = cartItems.length > 0 ? 40 : 0;
+  const tax = subtotal*0.05;
+  const total=subtotal+shipping+tax;
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 to-pink-100">
       <Navbar />
@@ -37,7 +42,7 @@ const Cart = () => {
                 {cartItems.map((item) => (
                   <li key={item.id} className="flex gap-4 items-center border-b pb-4">
                     <img
-                      src={item.image}
+                      src={`http://localhost:8000${item.image}`}
                       alt={item.name}
                       className="w-24 h-24 object-cover rounded-xl border"
                     />
@@ -47,7 +52,7 @@ const Cart = () => {
                         {item.inStock ? 'In Stock' : 'Out of Stock'}
                       </p>
                       <div className="mt-2 flex items-center space-x-3">
-                        <button className="bg-rose-200 px-2 py-1 rounded hover:bg-rose-300">-</button>
+                        <button onClick={() => updateQuantity(item.id, 'decrease')} className="bg-rose-200 px-2 py-1 rounded hover:bg-rose-300">-</button>
                         <span className="px-3 py-1 border rounded bg-white">{item.quantity}</span>
                         <button className="bg-rose-200 px-2 py-1 rounded hover:bg-rose-300">+</button>
                       </div>

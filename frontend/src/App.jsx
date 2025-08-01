@@ -8,7 +8,9 @@ import ChangePassword from './Pages/Auth/ChangePassword'
 import Cart from './Pages/Home/Cart'
 import Wishlist from './Pages/Home/wishlist'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import EcommerceUI from './Pages/Home/EcommerceUI'
+import Allproducts from './Pages/Home/AllProducts'
+import ProductbyCategory from './Pages/Home/ProductsbyCategory'
+
 
 const App = () => {
   return (
@@ -19,20 +21,16 @@ const App = () => {
             <Route path='/' element={<Homepage />} />
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={< Register />} />
+            <Route path='/products' element={<Allproducts />} />
+            <Route path='/products/:category' element={<ProductbyCategory />} />
             <Route path='/change-password' element={< ChangePassword />} />
             <Route path='/cart' element={<Cart />} />
             <Route path='/wishlist' element={<Wishlist />} />
-            <Route path='/ui' element={<EcommerceUI/>} />
-
-
           </Routes>
         </div>
 
       </div >
     </BrowserRouter >
-
-
-
   )
 }
 

@@ -42,15 +42,21 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            {['New Arrivals', 'Women', 'Men', 'Kids'].map((item) => (
-              <a
-                key={item}
-                href="#"
-                className="text-black hover:text-rose-600 transition-colors font-medium"
-              >
-                {item}
-              </a>
-            ))}
+            <Link to="/new_arrivals" className="text-black hover:text-rose-600 transition-colors font-medium">
+              New Arrivals
+            </Link>
+            <Link to="products" className="text-black hover:text-rose-600 transition-colors font-medium">
+              All Products
+            </Link>
+            <Link to="/products/women" className="text-black hover:text-rose-600 transition-colors font-medium">
+              Women
+            </Link>
+            <Link to="/products/men" className="text-black hover:text-rose-600 transition-colors font-medium">
+              Men
+            </Link>
+            <Link to="/products/kids" className="text-black hover:text-rose-600 transition-colors font-medium">
+              Kids
+            </Link>
           </nav>
 
           {/* Right Side Actions */}
@@ -98,11 +104,8 @@ const Navbar = () => {
                 </Link> */}
               </>
             )}
-
-
           </div>
         </div>
-
       </div>
     </header>
   );
