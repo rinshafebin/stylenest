@@ -10,7 +10,7 @@ const Cart = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await axiosInstance.get('/cart/');
+        const response = await axiosInstance.get('/cart/addtocart');
         setCartItems(response.data);
       } catch (error) {
         console.error('Failed to fetch cart:', error);
@@ -19,11 +19,7 @@ const Cart = () => {
     fetchCart();
   }, []);
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = 5.99;
-  const tax = subtotal * 0.08;
-  const total = subtotal + shipping + tax;
-
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 to-pink-100">
       <Navbar />

@@ -8,6 +8,7 @@ import ChangePassword from './Pages/Auth/ChangePassword'
 import Cart from './Pages/Home/Cart'
 import Wishlist from './Pages/Home/wishlist'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import EcommerceUI from './Pages/Home/EcommerceUI'
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
             <Route path='/change-password' element={< ChangePassword />} />
             <Route path='/cart' element={<Cart />} />
             <Route path='/wishlist' element={<Wishlist />} />
+            <Route path='/ui' element={<EcommerceUI/>} />
 
 
           </Routes>
