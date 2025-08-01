@@ -1,35 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ShoppingBag } from 'lucide-react';
 import Navbar from '../../Components/Common/Navbar';
 import Footer from '../../Components/Common/Footer';
+import axiosInstance from '../../api/axios';
 
 const Cart = () => {
-  const cartItems = [
-    {
-      id: 1,
-      name: 'Wireless Headphones',
-      price: 99.99,
-      quantity: 1,
-      image: 'https://via.placeholder.com/300',
-      inStock: true,
-    },
-    {
-      id: 2,
-      name: 'Smart Watch',
-      price: 199.99,
-      quantity: 2,
-      image: 'https://via.placeholder.com/300',
-      inStock: true,
-    },
-    {
-      id: 3,
-      name: 'Bluetooth Speaker',
-      price: 59.99,
-      quantity: 1,
-      image: 'https://via.placeholder.com/300',
-      inStock: false,
-    },
-  ];
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const response = await axiosInstance.get('/cart/');
+        setCartItems(response.data);
+      } catch (error) {
+        console.error('Failed to fetch cart:', error);
+      }
+    };
+    fetchCart();
+  }, []);
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping = 5.99;
@@ -116,6 +104,7 @@ const Cart = () => {
           </div>
         </div>
       </div>
+
     </div>
   );
 };
