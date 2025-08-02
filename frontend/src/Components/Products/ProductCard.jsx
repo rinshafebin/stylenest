@@ -1,7 +1,33 @@
 import React from 'react';
 import { Heart, ShoppingBag, Star } from 'lucide-react';
+import axiosInstance from '../../api/axios';
 
 export default function ProductCard({ product }) {
+
+  const handleAddtoCart = async () => {
+    try {
+      const response = await axiosInstance.post('/cart/add/', {
+        product_id: product.id,
+        quantity: 1,
+      })
+      console.log("Added to cart :", response.data);
+      alert('Product Added to cart ')
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      alert('You need to be logged in to add to cart.');
+    }
+  }
+
+  const handleWishlist = async () => {
+    try {
+      await axiosInstance.post('/wishlist/', { product_id: product.id });
+      alert("Added to wishlist");
+    } catch (error) {
+      console.error("Error adding to wishlist", error);
+    }
+  };
+
+
   return (
     <div className="bg-white rounded-2xl shadow-md p-4 hover:shadow-lg transition duration-300 flex flex-col">
       <div className="relative">
@@ -24,7 +50,9 @@ export default function ProductCard({ product }) {
 
         <div className="flex justify-between items-center mt-3">
           <span className="text-lg font-bold text-rose-500">₹{product.price}</span>
-          <button className="bg-rose-500 hover:bg-rose-600 text-white p-2 rounded-xl shadow">
+          <button
+            onClick={handleAddtoCart}
+            className="bg-rose-500 hover:bg-rose-600 text-white p-2 rounded-xl shadow">
             <ShoppingBag size={16} />
           </button>
         </div>

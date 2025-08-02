@@ -1,7 +1,7 @@
 from django.urls import path
-from Cart.views import AddToWishView
+from .views import WishlistView
 
 urlpatterns = [
-    path('addtowishlist/',AddToWishView.as_view(),name='Wishlist')
-
+    path('add/', WishlistView.as_view(), name='wishlist'),
+    path('list/<int:product_id>/', WishlistView.as_view(), name='wishlist-delete'),
 ]

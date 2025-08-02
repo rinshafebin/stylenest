@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Heart, ChevronLeft } from 'lucide-react';
 import Navbar from '../../Components/Common/Navbar';
-import Footer from '../../Components/Common/Footer';
 import axiosInstance from '../../api/axios'; // make sure this is correctly configured
+import { useNavigate } from 'react-router-dom';
 
 const Wishlist = () => {
+
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchWishlist = async () => {
@@ -22,6 +24,10 @@ const Wishlist = () => {
 
     fetchWishlist();
   }, []);
+
+  const handleSubmit = ()=>{
+    navigate('/products')
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -74,7 +80,7 @@ const Wishlist = () => {
             </div>
 
             <div className="mt-12 flex justify-between items-center">
-              <button className="text-rose-600 hover:text-pink-600 flex items-center">
+              <button onClick={handlSubmit} className="text-rose-600 hover:text-pink-600 flex items-center">
                 <ChevronLeft className="w-4 h-4 mr-2" />
                 Continue Shopping
               </button>

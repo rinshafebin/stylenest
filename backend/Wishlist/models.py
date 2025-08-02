@@ -1,11 +1,14 @@
 from django.db import models
-from Auth.models import CustomUser
+from django.conf import settings
 from Products.models import Product
 
-# Create your models here.
-class WishList(models.Model):
-    user = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+class Wishlist(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
 
-class WishListItem(models.Model):
-    wishlist = models.ForeignKey(WishList,on_delete=models.CASCADE)
-    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    class Meta:
+        unique_together = ['user', 'product'] 
+
+    def __str__(self):
+        return f"{self.user.username} - {self.product.name}"

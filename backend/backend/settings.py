@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'AdminPanel',
     'corsheaders',
     'Cart',
+    'Wishlist'
 ]
 
 MIDDLEWARE = [

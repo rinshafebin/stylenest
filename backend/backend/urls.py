@@ -9,6 +9,8 @@ urlpatterns = [
     path('adminside/', include('AdminPanel.urls')),
     path('cart/', include('Cart.urls')),
     path('products/', include('Products.urls')),
+    path('wishlist/', include('Wishlist.urls')),
+
 
 ]
 

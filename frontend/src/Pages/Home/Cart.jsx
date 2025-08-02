@@ -4,23 +4,51 @@ import Footer from '../../Components/Common/Footer';
 import { Trash2 } from 'lucide-react';
 import axiosInstance from '../../api/axios';
 
-
 export default function Cart() {
-  
-  const[cartItems,setCartItems]=useState([])
+  const [cartItems, setCartItems] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchCartItems();
-  },[])
+  }, []);
 
-  const fetchCartItems = async()=>{
-    try{
-      const res = await axiosInstance.get('')
-    }catch(error){
-
+  const fetchCartItems = async () => {
+    try {
+      const res = await axiosInstance.get('/cart/list/');
+      setCartItems(res.data);
+    } catch (error) {
+      console.error('Error fetching cart:', error);
     }
-  }
+  };
 
+  const handleQuantityChange = async (id, action) => {
+    try {
+      const item = cartItems.find((i) => i.id === id);
+      const newqty = action === 'increase' ? item.quantity + 1 : item.quantity - 1;
+
+      if (newqty <= 0) return handleRemove(id);
+
+      await axiosInstance.put(`cart/update/${id}/`, {
+        quantity: newqty,
+      });
+      fetchCartItems();
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+    }
+  };
+
+  const handleRemove = async (id) => {
+    try {
+      await axiosInstance.delete(`cart/remove/${id}/`);
+      fetchCartItems();
+    } catch (error) {
+      console.error('Error removing item:', error);
+    }
+  };
+
+  const totalPrice = cartItems.reduce(
+    (total, item) => total + item.product.price * item.quantity,
+    0
+  );
 
   return (
     <>
@@ -31,35 +59,45 @@ export default function Cart() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Cart Items */}
             <div className="md:col-span-2 space-y-6">
-              {cartItems.map(item => (
+              {cartItems.map((item) => (
                 <div
                   key={item.id}
                   className="flex items-center justify-between bg-white border border-gray-200 rounded-2xl p-4 shadow-sm min-h-[8rem]"
                 >
                   <div className="flex items-center gap-4">
                     <img
-                      src={item.image}
-                      alt={item.name}
+                      src={item.product.image}
+                      alt={item.product.name}
                       className="w-24 h-24 rounded-xl object-cover border"
                     />
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
-                      <p className="text-sm text-gray-600">₹{item.price}</p>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {item.product.name}
+                      </h3>
+                      <p className="text-sm text-gray-600">₹{item.product.price}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
                     {/* Quantity Control */}
                     <div className="flex items-center border border-rose-300 rounded-xl overflow-hidden">
-                      <button className="px-3 py-1 text-rose-500 font-bold hover:bg-rose-100 transition">
+                      <button
+                        onClick={() => handleQuantityChange(item.id, 'decrease')}
+                        className="px-3 py-1 text-rose-500 font-bold hover:bg-rose-100 transition"
+                      >
                         −
                       </button>
                       <span className="px-4 py-1 text-gray-800 bg-white">{item.quantity}</span>
-                      <button className="px-3 py-1 text-rose-500 font-bold hover:bg-rose-100 transition">
+                      <button
+                        onClick={() => handleQuantityChange(item.id, 'increase')}
+                        className="px-3 py-1 text-rose-500 font-bold hover:bg-rose-100 transition"
+                      >
                         +
                       </button>
                     </div>
-                    {/* Remove */}
-                    <button className="text-rose-500 hover:text-rose-700 transition">
+                    <button
+                      onClick={() => handleRemove(item.id)}
+                      className="text-rose-500 hover:text-rose-700 transition"
+                    >
                       <Trash2 size={20} />
                     </button>
                   </div>

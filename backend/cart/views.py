@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from Cart.models import CartItem
+from Cart.models import Cart
 from Cart.serializers import CartItemSerializer
 from Products.models import Product
 
@@ -11,15 +11,20 @@ class AddToCartView(APIView):
     permission_classes = [IsAuthenticated]
     
     def post(self,request):
+        print("🔐 Backend received Authorization:", request.META.get('HTTP_AUTHORIZATION'))
+
         product_id =request.data.get("product_id")
-        quantity = request.data.get("quantity",1)
+        quantity = int(request.data.get("quantity",1))
+        
+        if quantity <= 0:
+            return Response({"error": "Quantity must be greater than zero"}, status=400)
         
         try:
             product = Product.objects.get(id=product_id)
         except Product.DoesNotExist:
             return Response({"error": "Product not found"}, status=404)
 
-        cart_item,created = CartItem.objects.get_or_create(
+        cart_item,created = Cart.objects.get_or_create(
             user = request.user,
             product = product,
             defaults = {"quantity":quantity}
@@ -29,25 +34,31 @@ class AddToCartView(APIView):
             cart_item.save()
             
         serializer = CartItemSerializer(cart_item) 
-        return Response({"message": "Item added to cart", "cart_item": serializer.data})
+        return Response({"message": "Item added to cart", "cart_item": serializer.data}, status=status.HTTP_201_CREATED)
 
 class CartListView(APIView):
     permission_classes=[IsAuthenticated]
     
     def get(self,request):
-        cart_items = CartItem.objects.filter(user = request.user)
+        cart_items = Cart.objects.filter(user = request.user)
         serializer = CartItemSerializer(cart_items,many=True)
         return Response(serializer.data)
     
 
 class UpdateCartItemView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def put(self,request,pk):
         try:
-            cart_item = CartItem.objects.get(pk=pk,user=request.user)
-        except CartItem.DoesNotExist:           
+            cart_item = Cart.objects.get(pk=pk,user=request.user)
+        except Cart.DoesNotExist:           
             return Response({"error": "Item not found"}, status=404)
         
-        quantity = request.data.get("quantity",1)
+        quantity = int(request.data.get("quantity",1))
+        
+        if quantity <= 0:  
+            return Response({"error": "Quantity must be greater than zero"}, status=400)
+        
         cart_item.quantity = quantity
         cart_item.save()
         
@@ -60,8 +71,8 @@ class RemoveCartItemView(APIView):
 
     def delete(self, request, pk):
         try:
-            cart_item = CartItem.objects.get(pk=pk, user=request.user)
-        except CartItem.DoesNotExist:
+            cart_item = Cart.objects.get(pk=pk, user=request.user)
+        except Cart.DoesNotExist:
             return Response({"error": "Item not found"}, status=404)
 
         cart_item.delete()

@@ -1,18 +1,19 @@
-import axios from 'axios'
+import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL:import.meta.env.VITE_API_URL,
-    headers:{
-        'Content-Type':'application/json'
-    },
-}) 
+  baseURL: 'http://127.0.0.1:8000/',
+});
 
-axiosInstance.interceptors.request.use((config)=>{
-    const token = localStorage.getItem('access_token')
-    if(token){
-        config.headers.Authorization = `Bearer $ {token}`
+// Automatically attach token
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-    return config
-})
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 export default axiosInstance;
