@@ -66,9 +66,9 @@ export default function Cart() {
                 >
                   <div className="flex items-center gap-4">
                     <img
-                      src={item.product.image}
+                      src={`http://localhost:8000${item.product.image}`}
                       alt={item.product.name}
-                      className="w-24 h-24 rounded-xl object-cover border"
+                      className="w-24 h-30 rounded-xl object-cover border"
                     />
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
@@ -76,6 +76,7 @@ export default function Cart() {
                       </h3>
                       <p className="text-sm text-gray-600">₹{item.product.price}</p>
                     </div>
+                  
                   </div>
                   <div className="flex items-center gap-4">
                     {/* Quantity Control */}

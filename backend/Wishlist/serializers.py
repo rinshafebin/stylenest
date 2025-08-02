@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Wishlist
+from wishlist.models import WishlistItem
 from Products.serializers import ProductSerializer
 
-class WishlistSerializer(serializers.ModelSerializer):
+class WishlistItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
 
     class Meta:
-        model = Wishlist
+        model = WishlistItem
         fields = ['id', 'product', 'added_at']
