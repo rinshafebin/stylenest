@@ -20,9 +20,11 @@ export default function LoginPage() {
         email,
         password,
       });
-      const{access,refresh}=response.data;
+      const{access,refresh,user}=response.data;
       localStorage.setItem('access_token',access)
       localStorage.setItem('refresh_token',refresh)
+      localStorage.setItem('user',JSON.stringify(user));
+
       navigate('/')
     }catch(err){
       console.error(err)

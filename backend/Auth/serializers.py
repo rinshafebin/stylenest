@@ -6,6 +6,10 @@ from Auth.models import CustomUser
 # ------------------------user registration serializer ---------------------------
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id','username','email']
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -15,10 +19,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},
         }
-   
-    
 
-    
     def create(self, validated_data):
         return CustomUser.objects.create_user(**validated_data) 
          

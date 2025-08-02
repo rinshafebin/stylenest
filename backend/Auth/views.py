@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework.views import APIView
-from Auth.serializers import UserRegistrationSerializer,LoginSerializer,ChangePasswordSerializer
+from Auth.serializers import UserRegistrationSerializer,LoginSerializer,ChangePasswordSerializer,UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
@@ -91,12 +91,15 @@ class Login(APIView):
         if serilaizer.is_valid():
             user = serilaizer.validated_data['user']
             refresh = RefreshToken.for_user(user)
+            user_data = UserSerializer(user).data
                         
             return Response({
               'message':'login was succesfull',
               'refresh':str(refresh) ,
               'access': str(refresh.access_token),
+              'user':user_data
             },status=status.HTTP_200_OK)
+            print(Response)
         return Response(serilaizer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 

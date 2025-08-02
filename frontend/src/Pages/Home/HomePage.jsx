@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, Star, Heart, ShoppingBag, Truck, Shield, RefreshCw, Headphones } from 'lucide-react';
+import { ChevronRight, Truck, Shield, RefreshCw, Headphones } from 'lucide-react';
 import Navbar from '../../Components/Common/Navbar';
 import Footer from '../../Components/Common/Footer';
+import { Link } from 'react-router-dom';
 
 import women from '../../Assets/women.jpg';
 import men from '../../assets/men.jpg';
 import kids from '../../assets/kids.jpg';
-
 import hero1 from '../../Assets/hero1.jpg';
 import hero2 from '../../Assets/hero2.jpg';
 import hero3 from '../../Assets/hero3.jpg';
@@ -30,52 +30,50 @@ export default function Homepage() {
 
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-rose-50 to-pink-50 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-5xl font-bold text-black mb-4">
-                Style for Every{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-500">
-                  Story
-                </span>
-              </h1>
-              <p className="text-lg text-gray-600 mb-8">
-                Discover curated fashion for every member of your family.
-                From women's elegance to men's sophistication and kids'
-                playful styles.
-              </p>
-              <div className="flex space-x-4 mb-12">
-                <button className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-3 rounded-lg hover:opacity-90 flex items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <h1 className="text-5xl font-bold text-black mb-4">
+              Style for Every{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-500">
+                Story
+              </span>
+            </h1>
+            <p className="text-lg text-gray-600 mb-8">
+              Discover curated fashion for every member of your family — from women’s elegance to men’s sophistication and kids’ playful styles.
+            </p>
+            <div className="flex space-x-4 mb-12">
+              <Link to="/products">
+                <button className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-3 rounded-lg hover:opacity-90 flex items-center transition">
                   Shop Now <ChevronRight className="ml-2 w-4 h-4" />
                 </button>
-                <button className="border-2 border-rose-500 text-rose-600 px-8 py-3 rounded-lg hover:bg-rose-50">
-                  Explore Collections
-                </button>
+              </Link>
+              <button className="border-2 border-rose-500 text-rose-600 px-8 py-3 rounded-lg hover:bg-rose-100 transition">
+                Explore Collections
+              </button>
+            </div>
+            <div className="flex space-x-8">
+              <div>
+                <div className="text-2xl font-bold text-black">15K+</div>
+                <div className="text-gray-600">Happy Families</div>
               </div>
-              <div className="flex space-x-8">
-                <div>
-                  <div className="text-2xl font-bold text-black">15K+</div>
-                  <div className="text-gray-600">Happy Families</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-black">1000+</div>
-                  <div className="text-gray-600">Products</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-black">4.8</div>
-                  <div className="text-gray-600">Rating</div>
-                </div>
+              <div>
+                <div className="text-2xl font-bold text-black">1000+</div>
+                <div className="text-gray-600">Products</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-black">4.8</div>
+                <div className="text-gray-600">Rating</div>
               </div>
             </div>
-            <div className="relative">
-              <div className="bg-white rounded-3xl p-4 lg:p-8 shadow-lg">
-                <div className="w-full h-96 rounded-2xl overflow-hidden">
-                  <img
-                    src={images[currentImageIndex]}
-                    alt="Hero slideshow"
-                    className="w-full h-full object-cover transition-opacity duration-1000"
-                  />
-                </div>
+          </div>
+          <div className="relative">
+            <div className="bg-white rounded-3xl p-4 lg:p-8 shadow-lg">
+              <div className="w-full h-96 rounded-2xl overflow-hidden">
+                <img
+                  src={images[currentImageIndex]}
+                  alt="Hero slideshow"
+                  className="w-full h-full object-cover transition-opacity duration-1000"
+                />
               </div>
             </div>
           </div>
@@ -95,10 +93,15 @@ export default function Homepage() {
             <p className="text-gray-600">Find the perfect style</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[{ img: women, title: 'Women' }, { img: men, title: 'Men' }, { img: kids, title: 'Kids' }].map((cat, idx) => (
-              <div
+            {[
+              { img: women, title: 'Women', link: 'women' },
+              { img: men, title: 'Men', link: 'men' },
+              { img: kids, title: 'Kids', link: 'kids' },
+            ].map((cat, idx) => (
+              <Link
+                to={`/products/${cat.link}`}
                 key={idx}
-                className="relative group overflow-hidden rounded-3xl shadow-md hover:shadow-xl transition-shadow cursor-pointer"
+                className="relative group overflow-hidden rounded-3xl shadow-md hover:shadow-xl transition-shadow cursor-pointer block"
               >
                 <img
                   src={cat.img}
@@ -106,9 +109,38 @@ export default function Homepage() {
                   className="w-full h-72 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent p-6 flex flex-col justify-end">
-                  <h3 className="text-white text-2xl font-semibold mb-1">
-                    {cat.title}
-                  </h3>
+                  <h3 className="text-white text-2xl font-semibold mb-1">{cat.title}</h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+  
+      {/* New Arrivals Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-black mb-4">
+              New{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-500">
+                Arrivals
+              </span>
+            </h2>
+            <p className="text-gray-600">Discover our most popular items</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[hero1, hero2, hero3, hero1].map((img, idx) => (
+              <div key={idx} className="bg-white rounded-2xl shadow-md hover:shadow-lg transition overflow-hidden">
+                <img src={img} alt="New Arrival" className="w-full h-56 object-cover" />
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-black">Product Name</h3>
+                  <p className="text-rose-500 font-bold mt-2">$49.99</p>
+                  <button className="mt-4 bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded-lg w-full hover:opacity-90">
+                    View Product
+                  </button>
                 </div>
               </div>
             ))}
@@ -116,7 +148,7 @@ export default function Homepage() {
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
+      {/* Why Choose Us Section
       <section className="py-16 bg-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -147,22 +179,8 @@ export default function Homepage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-black mb-4">
-              New{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-500">
-                Arrivals
-              </span>
-            </h2>
-            <p className="text-gray-600">Discover our most popular items</p>
-          </div>
-        </div>
-      </section>
 
       <Footer />
     </div>

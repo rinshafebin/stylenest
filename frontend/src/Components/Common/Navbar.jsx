@@ -11,6 +11,7 @@ const Navbar = () => {
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token');
     const storedUser = localStorage.getItem('user');
+   
     if (accessToken && storedUser) {
       setUser(JSON.parse(storedUser));
     } else {
@@ -79,7 +80,7 @@ const Navbar = () => {
             {/* Auth Buttons */}
             {user ? (
               <>
-                <span className="hidden sm:block text-black text-sm">Hi, {user.name}</span>
+                <span className="hidden sm:block text-black text-sm">Hi, {user.username}</span>
                 <button
                   onClick={handleLogout}
                   className="text-black hover:text-red-600 text-sm font-medium"

@@ -2,8 +2,7 @@ import React from 'react'
 import Login from './Pages/Auth/Login'
 import Register from './Pages/Auth/Register'
 import Homepage from './Pages/Home/HomePage'
-import Navbar from './Components/Common/Navbar'
-import Footer from './Components/Common/Footer'
+import Logout from './Pages/Auth/Logout'
 import ChangePassword from './Pages/Auth/ChangePassword'
 import Cart from './Pages/Home/Cart'
 import Wishlist from './Pages/Home/wishlist'
@@ -26,6 +25,8 @@ const App = () => {
             <Route path='/change-password' element={< ChangePassword />} />
             <Route path='/cart' element={<Cart />} />
             <Route path='/wishlist' element={<Wishlist />} />
+            <Route path='/logout' element={<Logout />} />
+
           </Routes>
         </div>
 
