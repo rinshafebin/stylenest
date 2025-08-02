@@ -14,7 +14,7 @@ export default function Logout() {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         localStorage.removeItem("user");
-        navigate("/login");
+        navigate("/");
         return;
       }
 
@@ -25,7 +25,7 @@ export default function Logout() {
         localStorage.removeItem("refresh_token");
         localStorage.removeItem("user");
 
-        navigate("/login");
+        navigate("/");
       } catch (error) {
         console.error("Logout failed", error);
 
@@ -33,7 +33,7 @@ export default function Logout() {
         localStorage.removeItem("refresh_token");
         localStorage.removeItem("user");
 
-        navigate("/login");
+        navigate("/");
       }
     };
 

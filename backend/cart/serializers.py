@@ -1,21 +1,16 @@
 from rest_framework import serializers
 from Products.models import Product 
+from Cart.models import CartItem
 
-class AddToCartItemSerializer(serializers.Serializer):
-    product_id = serializers.CharField()
-    quantity = serializers.IntegerField(min_value=1,default=1) 
-    
-    def validate_product_id(self,value):
-        if not Product.objects.filter(id=value).exists():
-            raise serializers.ValidationError("product not found")
-        return value
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id','name','price','image']
 
+class CartItemSerializer(serializers.Serializer):
+    product = ProductSerializer(read_only = True)
+    
+    class Meta:
+        model = CartItem
+        fields = ['id','product','quantity']
 
-class AddToWishlistSerializer(serializers.Serializer):
-    product_id = serializers.IntegerField()
-    
-    def validate_product_id(self,value):
-        if not Product.objects.filter(id=value).exists():
-            raise serializers.ValidationError("product not found")
-        return value
-    

@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from Cart.models import Cart, CartItem,WishList,WishListItem
-from Cart.serializers import AddToCartItemSerializer,AddToWishlistSerializer
+from Cart.models import CartItem
+from Cart.serializers import CartItemSerializer
 from Products.models import Product
 
 
@@ -11,53 +11,58 @@ class AddToCartView(APIView):
     permission_classes = [IsAuthenticated]
     
     def post(self,request):
-        serializer = AddToCartItemSerializer(data = request.data)
-        if serializer.is_valid():
-            user =request.user
-            product_id = serializer.validated_data['product_id']
-            quantity = serializer.validated_data['quantity']
+        product_id =request.data.get("product_id")
+        quantity = request.data.get("quantity",1)
+        
+        try:
             product = Product.objects.get(id=product_id)
-            cart,created = Cart.objects.get_or_create(user=user)  
-            cart_item,created = CartItem.objects.get_or_create(cart=cart,product=product) 
-            
-            if not created:
-                cart_item.quantity += quantity
-            else :
-                cart_item.quantity = quantity    
-            
+        except Product.DoesNotExist:
+            return Response({"error": "Product not found"}, status=404)
+
+        cart_item,created = CartItem.objects.get_or_create(
+            user = request.user,
+            product = product,
+            defaults = {"quantity":quantity}
+        )   
+        if not created:
+            cart_item.quantity +=quantity
             cart_item.save()
             
+        serializer = CartItemSerializer(cart_item) 
+        return Response({"message": "Item added to cart", "cart_item": serializer.data})
 
-            return Response({
-                'message': 'Product added to cart',
-                "product_id": product.id,
-                "name" :product.name,
-                "quantity": cart_item.quantity
-                
-            }, status=status.HTTP_201_CREATED)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            
-
-class AddToWishView(APIView):
-    permission_classes = [IsAuthenticated]
+class CartListView(APIView):
+    permission_classes=[IsAuthenticated]
     
-    def post(self,request):
-        serializer = AddToWishlistSerializer(data = request.data)
-        if serializer.is_valid():
-            user =request.user
-            product_id = serializer.validated_data['product_id']
-            product = Product.objects.get(id = product_id)
-            
-            wishlist , created = WishList.objects.get_or_create(user=user)
-            item ,created = WishListItem.objects.get_or_create(wishlist=wishlist,product=product)
-            
-            if not created :
-                return Response({"message": "Product already in wishlist "}, status=status.HTTP_200_OK)            
-            return Response({"message": "Product added to wishlist."}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-  
- 
-            
-            
+    def get(self,request):
+        cart_items = CartItem.objects.filter(user = request.user)
+        serializer = CartItemSerializer(cart_items,many=True)
+        return Response(serializer.data)
+    
 
+class UpdateCartItemView(APIView):
+    def put(self,request,pk):
+        try:
+            cart_item = CartItem.objects.get(pk=pk,user=request.user)
+        except CartItem.DoesNotExist:           
+            return Response({"error": "Item not found"}, status=404)
+        
+        quantity = request.data.get("quantity",1)
+        cart_item.quantity = quantity
+        cart_item.save()
+        
+        serializer = CartItemSerializer(cart_item)
+        return Response({"message": "Cart item updated", "updated_item": serializer.data})
+
+
+class RemoveCartItemView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        try:
+            cart_item = CartItem.objects.get(pk=pk, user=request.user)
+        except CartItem.DoesNotExist:
+            return Response({"error": "Item not found"}, status=404)
+
+        cart_item.delete()
+        return Response({"message": "Item removed from cart"})
