@@ -1,10 +1,9 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://127.0.0.1:8000/',
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
-// Automatically attach token
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
