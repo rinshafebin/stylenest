@@ -9,28 +9,33 @@ import Wishlist from './Pages/Home/wishlist'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Allproducts from './Pages/Home/AllProducts'
 import ProductbyCategory from './Pages/Home/ProductsbyCategory'
-import { AuthProvider,useAuth } from './context/AuthContext'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import { setUpInterceptors } from './api/axios'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
-export default function AppWrapper(){
-  return(
+export default function AppWrapper() {
+  return (
     <AuthProvider>
       <App />
     </ AuthProvider>
   )
 }
-
-
-const App = () => { 
+const App = () => {
   const { token } = useAuth();
 
-  useEffect(()=>{
+  useEffect(() => {
     setUpInterceptors(token)
-  },[token])
+  }, [token])
 
   return (
     <BrowserRouter>
       <div className="flex flex-col min-h-screen">
+        <ToastContainer
+          position="bottom-right"
+          autoClose={200}
+        />
+
         <div className="flex-grow">
           <Routes>
             <Route path='/' element={<Homepage />} />

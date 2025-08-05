@@ -3,38 +3,42 @@ import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 import axiosInstance from '../../api/axios'
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export const Login = () => {
-
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    SpeechSynthesisErrorEvent('')
+    setError('');
     setLoading(true);
 
     try {
-      const response = await axiosInstance.post('auth/login', {
+      const response = await axiosInstance.post('auth/login/', {
         email,
         password,
-      })
-      const { access, refresh, user } = response.data
+      });
+      const { access, refresh, user } = response.data;
       login(access, refresh, user);
-      navigate("/")
+
+      toast.success("Login successfully")
+      navigate("/");
     } catch (error) {
-      console.error(err);
+      console.error(error);
+      setError("Invalid credentials. Please try again.");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-100 flex items-center justify-center p-4">
-
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-rose-200 rounded-full opacity-20 blur-3xl"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-200 rounded-full opacity-20 blur-3xl"></div>
@@ -137,4 +141,4 @@ export const Login = () => {
   );
 }
 
-export default Login
+export default Login;
