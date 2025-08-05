@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Login from './Pages/Auth/Login'
 import Register from './Pages/Auth/Register'
 import Homepage from './Pages/Home/HomePage'
@@ -9,9 +9,25 @@ import Wishlist from './Pages/Home/wishlist'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Allproducts from './Pages/Home/AllProducts'
 import ProductbyCategory from './Pages/Home/ProductsbyCategory'
+import { AuthProvider,useAuth } from './context/AuthContext'
+import { setUpInterceptors } from './api/axios'
+
+export default function AppWrapper(){
+  return(
+    <AuthProvider>
+      <App />
+    </ AuthProvider>
+  )
+}
 
 
-const App = () => {
+const App = () => { 
+  const { token } = useAuth();
+
+  useEffect(()=>{
+    setUpInterceptors(token)
+  },[token])
+
   return (
     <BrowserRouter>
       <div className="flex flex-col min-h-screen">
@@ -35,4 +51,3 @@ const App = () => {
   )
 }
 
-export default App

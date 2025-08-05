@@ -1,40 +1,40 @@
-import React, { useState } from 'react';
-import axiosInstance from '../../api/axios';
+import React, { useState } from 'react'
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
-import {useNavigate} from 'react-router-dom'
+import axiosInstance from '../../api/axios'
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import axios from 'axios';
 
+export const Login = () => {
 
-export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const[email,setEmail] = useState('');
-  const [password,setPassword] = useState('')
-  const [eror,setEror]=useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleSubmit= async(e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('submitted')
-    setEror('')
-    try{
-      const response=await axiosInstance.post('auth/login/',{
+    SpeechSynthesisErrorEvent('')
+    setLoading(true);
+
+    try {
+      const response = await axiosInstance.post('auth/login', {
         email,
         password,
-      });
-      const{access,refresh,user}=response.data;
-      localStorage.setItem('access_token',access)
-      localStorage.setItem('refresh_token',refresh)
-      localStorage.setItem('user',JSON.stringify(user));
-
-      navigate('/')
-    }catch(err){
-      console.error(err)
-      setEror('invalid credentials,please try again .')
+      })
+      const { access, refresh, user } = response.data
+      login(access, refresh, user);
+      navigate("/")
+    } catch (error) {
+      console.error(err);
     }
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-100 flex items-center justify-center p-4">
-      {/* Background decorative elements */}
+
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-rose-200 rounded-full opacity-20 blur-3xl"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-200 rounded-full opacity-20 blur-3xl"></div>
@@ -57,10 +57,11 @@ export default function LoginPage() {
                 <input
                   type="email"
                   value={email}
-                  onChange={(e)=>setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white focus:bg-white"
-                required/>
+                  required
+                />
               </div>
             </div>
 
@@ -73,10 +74,11 @@ export default function LoginPage() {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
-                  onChange={(e)=>setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white focus:bg-white"
-                required/>
+                  required
+                />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -99,13 +101,22 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 px-6 rounded-xl font-semibold hover:from-rose-600 hover:to-pink-600 focus:ring-2 focus:ring-rose-400 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl group"
+              disabled={loading}
+              className={`w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 px-6 rounded-xl font-semibold focus:ring-2 focus:ring-rose-400 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl group ${
+                loading ? 'opacity-50 cursor-not-allowed' : 'hover:from-rose-600 hover:to-pink-600'
+              }`}
             >
               <div className="flex items-center justify-center space-x-2">
-                <span>Sign In</span>
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <span>{loading ? 'Signing in...' : 'Sign In'}</span>
+                {!loading && <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />}
               </div>
             </button>
+
+            {error && (
+              <p className="text-sm text-red-500 text-center mt-2">
+                {error}
+              </p>
+            )}
           </form>
 
           <div className="mt-8 text-center">
@@ -113,7 +124,7 @@ export default function LoginPage() {
               Don’t have an account?{' '}
               <button
                 type="button"
-                onClick={()=>navigate('/register')}
+                onClick={() => navigate('/register')}
                 className="font-semibold text-rose-600 hover:text-rose-500 transition-colors"
               >
                 Create an account
@@ -125,3 +136,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+export default Login
