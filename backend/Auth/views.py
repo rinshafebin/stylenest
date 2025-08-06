@@ -1,14 +1,11 @@
 from django.shortcuts import render
-
-# Create your views here.
 from rest_framework.views import APIView
 from Auth.serializers import UserRegistrationSerializer,LoginSerializer,ChangePasswordSerializer,UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework import status
-from Auth.models import CustomUser
-
+from Auth.models import CustomUser,PasswordResetOTP
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
@@ -18,6 +15,8 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404 
 from django.contrib.auth.hashers import make_password
+import random 
+
 
 
 
@@ -129,10 +128,85 @@ class ChangePassword(APIView):
             
 
 
+# -------------------------- Logout -------------------------------------------
+   
+class Logout(APIView):
+    permission_classes=[IsAuthenticated]
+    
+    def post(self,request):
+        try:
+            refresh_token = request.data.get('refresh')
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({'message':'logout was succesfull'},status=status.HTTP_200_OK)
+        except Exception:
+            return Response({'message':'logout failed'},status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# ------------------------password resetting by otp---------------------------------
+
+class ResetPasswordOTP(APIView):
+    def post(self,request):
+        email = request.data.get('email')
+        if not email:
+            return Response({'error':'email is required'},status=status.HTTP_400_BAD_REQUEST)
+        
+        try :
+            user = CustomUser.objects.get(email=email)
+        except:
+            return Response({'error':"user not found"},status=status.HTTP_404_NOT_FOUND)
+    
+        otp = str(random.randint(100000,999999))
+        PasswordResetOTP.objects.create(user=user,otp=otp)
+    
+        send_mail(
+            'your OTP Code',
+            f'use this otp to reset your password :{otp}',
+            'admin@stylenest.com',
+            [user.email],
+        )
+        
+        return Response({'message': 'OTP sent to your email'}, status=200)
+
+
+# --------------------------------- otp verification --------------------------------------
+   
+    class OtpVerificationResetPassword(APIView):
+        def post(self,request):
+            email = request.data.get('email')
+            otp = request.data.get('otp')
+            new_password = request.data.get('new_password')
+            
+            if not all([email,otp,new_password]):
+                return Response({"error":"all fields are required"})
+            
+            try :
+                user = user.objects.get(email=email)
+            except CustomUser.DoesNotExist:
+                return Response({'error':'user not found'},status=status.HTTP_400_BAD_REQUEST)
+            
+            try :
+                otp_obj = PasswordResetOTP.objects.filter(user=user ,otp=otp).latest('created_at')
+            except PasswordResetOTP.DoesNotExist:
+                return Response({'error':'invalid otp'},status=status.HTTP_400_BAD_REQUEST)
+            
+            if otp_obj.is_expired():
+                return Response({'error':'otp has expired'},status=status.HTTP_400_BAD_REQUEST)
+            
+            user.set_password(new_password)
+            user.save()
+            otp_obj.delete()
+            
+            return Response({'message': 'Password reset successfully'}, status=200)
+
+                
+            
+             
 
 # --------------------------------- reset password -------------------------------------
 
-# class ResetPassword(APIView):
+# class ForgetPassword(APIView):
     
 #     def post(self,request):
 #         email = request.data.get('email')
@@ -140,7 +214,7 @@ class ChangePassword(APIView):
 #             return Response({'error':'email is required'},status=status.HTTP_400_BAD_REQUEST)
         
 #         try :
-#             user =CustomUser.objects.get(email=email)
+#             user = CustomUser.objects.get(email=email)
 #         except CustomUser.DoesNotExist :
 #             return Response({'error':'user not found'},status=status.HTTP_400_BAD_REQUEST)
         
@@ -186,27 +260,7 @@ class ChangePassword(APIView):
         
         
         
-#         # user.set_password(new_password)
-#         # user.save()
-#         return Response({'message': 'Password has been reset successfully'}, status=status.HTTP_200_OK)
-
-
-
-
-# -------------------------- Logout -------------------------------------------
-   
-class Logout(APIView):
-    permission_classes=[IsAuthenticated]
-    
-    def post(self,request):
-        try:
-            refresh_token = request.data.get('refresh')
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return Response({'message':'logout was succesfull'},status=status.HTTP_200_OK)
-        except Exception:
-            return Response({'message':'logout failed'},status=status.HTTP_400_BAD_REQUEST)
-
-
-
-# ------------------------------  ------------------------------------------------
+        # user.set_password(new_password)
+        # user.save()
+        # return Response({'message': 'Password has been reset successfully'}, status=status.HTTP_200_OK)
+# 

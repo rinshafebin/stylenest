@@ -13,6 +13,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import { setUpInterceptors } from './api/axios'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import ForgetPassword from './Pages/Auth/ForgetPassword'
 
 export default function AppWrapper() {
   return (
@@ -47,6 +48,7 @@ const App = () => {
             <Route path='/cart' element={<Cart />} />
             <Route path='/wishlist' element={<Wishlist />} />
             <Route path='/logout' element={<Logout />} />
+            <Route path = '/forgetpassword' element={< ForgetPassword/>} />
 
           </Routes>
         </div>

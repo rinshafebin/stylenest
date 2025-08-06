@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from datetime import timedelta
+from django.utils import timezone
+
+
 # Create your models here.
 
 class CustomUser(AbstractUser):
@@ -11,3 +15,11 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
     
+
+class PasswordResetOTP(models.Model):
+    user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def is_expired(self):
+        return timezone.now()>self.created_at + timedelta(minutes=10)

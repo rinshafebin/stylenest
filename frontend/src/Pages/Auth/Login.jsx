@@ -97,6 +97,7 @@ export const Login = () => {
               <div></div>
               <button
                 type="button"
+                onClick={()=>navigate('/forgetpassword')}
                 className="text-sm text-rose-600 hover:text-rose-500 font-medium transition-colors"
               >
                 Forgot password?
