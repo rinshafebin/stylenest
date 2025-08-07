@@ -4,10 +4,29 @@ from Products.serializers import ProductSerializer
 from rest_framework.response import Response 
 from Products.models import Product
 from rest_framework import status
+from django.db.models import Q
 # Create your views here.
 
 
 # ---------------------- all products  ---------------------------
+
+class Search_products(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        query = request.GET.get('search', '')
+        
+        if query:
+            products = Product.objects.filter(
+                Q(name__icontains=query) | Q(description__icontains=query)
+            )
+        else:
+            products = Product.objects.all()
+
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 
 class Products(APIView):
     permission_classes = [AllowAny]

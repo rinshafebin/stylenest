@@ -49,8 +49,8 @@ const App = () => {
             <Route path='/cart' element={<Cart />} />
             <Route path='/wishlist' element={<Wishlist />} />
             <Route path='/logout' element={<Logout />} />
-            <Route path = '/forgetpassword' element={< ForgetPassword />} />
-            <Route path='/verifyotp' element={<Verifyotp />} /> 
+            <Route path='/forgetpassword' element={< ForgetPassword />} />
+            <Route path='/verifyotp' element={<Verifyotp />} />
 
           </Routes>
         </div>

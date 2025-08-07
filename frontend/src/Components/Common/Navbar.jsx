@@ -7,11 +7,18 @@ const Navbar = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const location = useLocation()
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/products?search=${searchQuery}`);
+  };
+
 
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token');
     const storedUser = localStorage.getItem('user');
-   
+
     if (accessToken && storedUser) {
       setUser(JSON.parse(storedUser));
     } else {
@@ -33,7 +40,9 @@ const Navbar = () => {
     <header className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
+
           {/* Logo */}
+
           <Link to="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">SN</span>
@@ -42,31 +51,57 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
+
           <nav className="hidden lg:flex items-center space-x-8">
+
             <Link to="/new_arrivals" className="text-black hover:text-rose-600 transition-colors font-medium">
               New Arrivals
             </Link>
-            <Link to="products" className="text-black hover:text-rose-600 transition-colors font-medium">
+
+            <Link to="/products" className="text-black hover:text-rose-600 transition-colors font-medium">
               All Products
             </Link>
+
             <Link to="/products/women" className="text-black hover:text-rose-600 transition-colors font-medium">
               Women
             </Link>
+
             <Link to="/products/men" className="text-black hover:text-rose-600 transition-colors font-medium">
               Men
             </Link>
+
             <Link to="/products/kids" className="text-black hover:text-rose-600 transition-colors font-medium">
               Kids
             </Link>
+
           </nav>
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-3">
-            <Search className="w-5 h-5 text-black cursor-pointer hover:text-rose-700 transition-colors hidden sm:block" />
+            <form
+              onSubmit={handleSearchSubmit}
+              className="hidden sm:flex items-center bg-white border border-gray-300 rounded-full px-4 py-1 shadow-sm focus-within:ring-2 focus-within:ring-rose-500 transition-all duration-200"
+            >
+              <input
+                type="text"
+                placeholder="Search for products..."
+                className="bg-transparent text-sm text-gray-800 placeholder-gray-400 focus:outline-none px-2 py-1 w-40 md:w-64 transition-all duration-200"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button type="submit" className="ml-2">
+                <Search className="w-5 h-5 text-gray-600 hover:text-rose-600 transition" />
+              </button>
+            </form>
+
+
+
             <User className="w-5 h-5 text-black cursor-pointer hover:text-rose-700 transition-colors hidden sm:block" />
+
             <Link to="/Wishlist">
               <Heart className="w-5 h-5 text-  black cursor-pointer hover:text-rose-700 transition-colors" />
             </Link>
+
             <Link to="/cart">
               <div className="relative">
                 <ShoppingBag className="w-5 h-5 text-black cursor-pointer hover:text-rose-700 transition-colors" />
@@ -74,7 +109,6 @@ const Navbar = () => {
                   3
                 </span>
               </div>
-
             </Link>
 
             {/* Auth Buttons */}
@@ -96,13 +130,6 @@ const Navbar = () => {
                 >
                   Login
                 </button>
-
-                {/* <Link
-                  to="/register"
-                  className="text-black hover:text-rose-700 text-sm font-medium"
-                >
-                  Register
-                </Link> */}
               </>
             )}
           </div>
