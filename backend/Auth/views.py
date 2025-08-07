@@ -158,6 +158,8 @@ class ResetPasswordOTP(APIView):
             return Response({'error':"user not found"},status=status.HTTP_404_NOT_FOUND)
     
         otp = str(random.randint(100000,999999))
+        PasswordResetOTP.objects.filter(user=user).delete()
+        
         PasswordResetOTP.objects.create(user=user,otp=otp)
     
         send_mail(
@@ -170,38 +172,63 @@ class ResetPasswordOTP(APIView):
         return Response({'message': 'OTP sent to your email'}, status=200)
 
 
-# --------------------------------- otp verification --------------------------------------
+#  ------------ otp verification -----------
    
-    class OtpVerificationResetPassword(APIView):
-        def post(self,request):
-            email = request.data.get('email')
-            otp = request.data.get('otp')
-            new_password = request.data.get('new_password')
+class OtpVerificationResetPassword(APIView):
+    def post(self,request):
+        email = request.data.get('email')
+        otp = request.data.get('otp')
+        new_password = request.data.get('new_password')
             
-            if not all([email,otp,new_password]):
-                return Response({"error":"all fields are required"})
+        if not all([email,otp,new_password]):
+            return Response({"error":"all fields are required"})
             
-            try :
-                user = user.objects.get(email=email)
-            except CustomUser.DoesNotExist:
-                return Response({'error':'user not found'},status=status.HTTP_400_BAD_REQUEST)
+        try :
+            user = user.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            return Response({'error':'user not found'},status=status.HTTP_400_BAD_REQUEST)
             
-            try :
-                otp_obj = PasswordResetOTP.objects.filter(user=user ,otp=otp).latest('created_at')
-            except PasswordResetOTP.DoesNotExist:
-                return Response({'error':'invalid otp'},status=status.HTTP_400_BAD_REQUEST)
+        try :
+           otp_obj = PasswordResetOTP.objects.filter(user=user ,otp=otp).latest('created_at')
+        except PasswordResetOTP.DoesNotExist:
+            return Response({'error':'invalid otp'},status=status.HTTP_400_BAD_REQUEST)
             
-            if otp_obj.is_expired():
-                return Response({'error':'otp has expired'},status=status.HTTP_400_BAD_REQUEST)
-            
-            user.set_password(new_password)
-            user.save()
+        if otp_obj.is_expired():
             otp_obj.delete()
+            return Response({'error':'otp has expired'},status=status.HTTP_400_BAD_REQUEST)
             
-            return Response({'message': 'Password reset successfully'}, status=200)
+        user.set_password(new_password)
+        user.save()
+        otp_obj.delete()
+            
+        return Response({'message': 'Password reset successfully'}, status=200)
 
-                
-            
+
+class ResendOTPView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        if not email:
+            return Response({'error': 'Email is required'}, status=400)
+
+        try:
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            return Response({'error': 'User not found'}, status=404)
+
+        otp = str(random.randint(100000, 999999))
+
+        PasswordResetOTP.objects.filter(user=user).delete()
+        PasswordResetOTP.objects.create(user=user, otp=otp)
+
+        send_mail(
+            'Your OTP Code (Resent)',
+            f'Use this OTP to reset your password: {otp}',
+            'admin@stylenest.com',
+            [user.email],
+        )
+
+        return Response({'message': 'OTP resent to your email'}, status=200)
+     
              
 
 # --------------------------------- reset password -------------------------------------

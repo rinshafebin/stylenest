@@ -38,7 +38,7 @@ export default function RegisterPage() {
       });
 
       console.log(response.data);
-      alert('Account created successfully!');
+      toast('Account created successfully!');
       setFormData({ username: '', email: '', password: '', confirmPassword: '' });
       setError('');
       navigate('/login')

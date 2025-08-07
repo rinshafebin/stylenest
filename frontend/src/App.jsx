@@ -14,6 +14,7 @@ import { setUpInterceptors } from './api/axios'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import ForgetPassword from './Pages/Auth/ForgetPassword'
+import Verifyotp from './Pages/Auth/Verifyotp'
 
 export default function AppWrapper() {
   return (
@@ -48,7 +49,8 @@ const App = () => {
             <Route path='/cart' element={<Cart />} />
             <Route path='/wishlist' element={<Wishlist />} />
             <Route path='/logout' element={<Logout />} />
-            <Route path = '/forgetpassword' element={< ForgetPassword/>} />
+            <Route path = '/forgetpassword' element={< ForgetPassword />} />
+            <Route path='/verifyotp' element={<Verifyotp />} /> 
 
           </Routes>
         </div>

@@ -1,5 +1,13 @@
 from django.urls import path
-from Auth.views import UserRegistration,Login,Logout,ChangePassword,ResetPasswordOTP,OtpVerificationResetPassword
+from Auth.views import (
+    UserRegistration,
+    Login,
+    Logout,
+    ChangePassword,
+    ResetPasswordOTP,
+    OtpVerificationResetPassword,
+    ResendOTPView
+)
 
 urlpatterns = [
     path('register/',UserRegistration.as_view(),name='usersignup'),  
@@ -7,7 +15,8 @@ urlpatterns = [
     path('changepassword/',ChangePassword.as_view(),name='changepassword'), 
     path('logout/',Logout.as_view(),name='logout') ,
     path('send-otp/',ResetPasswordOTP.as_view(),name='ResetPasswordOTP'),
-    path('OtpVerification/',OtpVerificationResetPassword.as_view(),name='OtpVerificationResetPassword')
-    
+    path('OtpVerification/',OtpVerificationResetPassword.as_view(),name='OtpVerificationResetPassword'),
+    path('resend-otp/', ResendOTPView.as_view(), name='resend-otp'),
+
     
 ]
