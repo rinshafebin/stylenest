@@ -98,7 +98,7 @@ class Login(APIView):
               'access': str(refresh.access_token),
               'user':user_data
             },status=status.HTTP_200_OK)
-            print(Response)
+
         return Response(serilaizer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -135,11 +135,13 @@ class Logout(APIView):
     
     def post(self,request):
         try:
-            refresh_token = request.data.get('refresh')
+            refresh_token = request.data.get('refresh_token')
+            print("recieved token ",refresh_token)
             token = RefreshToken(refresh_token)
             token.blacklist()
             return Response({'message':'logout was succesfull'},status=status.HTTP_200_OK)
         except Exception:
+            print("logout error :",str(e))
             return Response({'message':'logout failed'},status=status.HTTP_400_BAD_REQUEST)
 
 

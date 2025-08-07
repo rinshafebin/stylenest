@@ -11,7 +11,7 @@ export default function Logout() {
     const logoutUser = async () => {
       const refreshToken = localStorage.getItem("refresh_token");
 
-      if (!refreshToken) {
+      if (!refreshToken || !token ) {
         logout();
         navigate("/");
         return;
@@ -19,7 +19,7 @@ export default function Logout() {
 
       try {
         await axiosInstance.post("auth/logout/",
-           { refresh: refreshToken },
+           { refresh_token : refreshToken },
            {
             headers :{
               'Authorization': `Bearer ${token}`, 
@@ -27,7 +27,6 @@ export default function Logout() {
             }
            }
           );
-        
         logout();
         navigate("/");
       }catch (error) {

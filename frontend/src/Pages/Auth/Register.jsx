@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react';
-import axiosInstance from '../../api/axios'
+import axiosInstance from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify'; // ✅ Added
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
+
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
@@ -37,11 +41,14 @@ export default function RegisterPage() {
         password: formData.password,
       });
 
-      console.log(response.data);
-      toast('Account created successfully!');
-      setFormData({ username: '', email: '', password: '', confirmPassword: '' });
-      setError('');
-      navigate('/login')
+      if (response.status === 201) {
+        toast.success('Account created successfully!');
+        console.log("account created succesfully")
+
+        setFormData({ username: '', email: '', password: '', confirmPassword: '' });
+        setError('');
+        navigate('/login');
+      }
     } catch (err) {
       console.error(err);
       if (err.response?.data?.message) {
@@ -149,6 +156,8 @@ export default function RegisterPage() {
             Log in here
           </button>
         </p>
+
+        <ToastContainer position="top-center" autoClose={3000} />
       </form>
     </div>
   );
