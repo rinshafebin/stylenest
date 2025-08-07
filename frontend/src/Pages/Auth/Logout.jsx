@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext'
 
 export default function Logout() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout,token } = useAuth();
 
   useEffect(() => {
     const logoutUser = async () => {
@@ -18,10 +18,19 @@ export default function Logout() {
       }
 
       try {
-        await axiosInstance.post("auth/logout/", { refresh: refreshToken });
+        await axiosInstance.post("auth/logout/",
+           { refresh: refreshToken },
+           {
+            headers :{
+              'Authorization': `Bearer ${token}`, 
+              'Content-Type': 'application/json',
+            }
+           }
+          );
+        
         logout();
         navigate("/");
-      } catch (error) {
+      }catch (error) {
         console.error("Logout failed", error);
         logout()
         navigate("/");

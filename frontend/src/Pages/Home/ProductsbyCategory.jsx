@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axiosInstance from "../../api/axios";
 import ProductGrid from "../../Components/Products/ProductGrid";
 import Navbar from "../../Components/Common/Navbar";
+import Footer from '../../Components/Common/Footer'
 
 export default function CategoryProducts() {
     const { category } = useParams();
@@ -28,6 +29,7 @@ export default function CategoryProducts() {
                 Explore the latest {category} fashion and find your perfect style.
             </p>
             <ProductGrid products={product} />
+            <Footer />
         </div>
     )
 

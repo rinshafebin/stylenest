@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axiosInstance from '../../api/axios'
 import ProductGrid from '../../Components/Products/ProductGrid'
 import Navbar from '../../Components/Common/Navbar'
+import Footer from '../../Components/Common/Footer'
 
 export default function AllProducts() {
     const [products, setProducts] = useState([])
@@ -31,6 +32,7 @@ export default function AllProducts() {
             </div>
 
             <ProductGrid products={products} />
+            <Footer/>
         </div>
 
 

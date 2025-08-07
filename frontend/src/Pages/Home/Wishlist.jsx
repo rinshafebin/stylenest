@@ -3,6 +3,8 @@ import { Heart, ChevronLeft } from 'lucide-react';
 import Navbar from '../../Components/Common/Navbar';
 import axiosInstance from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../../Components/Common/Footer'
+
 
 const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
@@ -121,6 +123,7 @@ const Wishlist = () => {
           </>
         )}
       </div>
+      <Footer />
     </div>
   );
 };
