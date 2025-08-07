@@ -130,19 +130,19 @@ class ChangePassword(APIView):
 
 # -------------------------- Logout -------------------------------------------
    
-class Logout(APIView):
-    permission_classes=[IsAuthenticated]
+# class Logout(APIView):
+#     permission_classes=[IsAuthenticated]
     
-    def post(self,request):
-        try:
-            refresh_token = request.data.get('refresh_token')
-            print("recieved token ",refresh_token)
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return Response({'message':'logout was succesfull'},status=status.HTTP_200_OK)
-        except Exception:
-            print("logout error :",str(e))
-            return Response({'message':'logout failed'},status=status.HTTP_400_BAD_REQUEST)
+#     def post(self,request):
+#         try:
+#             refresh_token = request.data.get('refresh_token')
+#             print("recieved token ",refresh_token)
+#             token = RefreshToken(refresh_token)
+#             token.blacklist()
+#             return Response({'message':'logout was succesfull'},status=status.HTTP_200_OK)
+#         except Exception:
+#             print("logout error :")
+#             return Response({'message':'logout failed'},status=status.HTTP_400_BAD_REQUEST)
 
 
 

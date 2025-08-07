@@ -25,7 +25,7 @@ export default function ProductCard({ product }) {
         product_id: product.id,
       });
       console.log(response.data);
-      setIsWishlisted(true); // assumes wishlist is only add, not toggle
+      setIsWishlisted(true);
     } catch (error) {
       console.error('Error adding to wishlist:', error);
       alert('You need to be logged in to use wishlist.');

@@ -4,8 +4,8 @@ import Register from './Pages/Auth/Register'
 import Homepage from './Pages/Home/HomePage'
 import Logout from './Pages/Auth/Logout'
 import ChangePassword from './Pages/Auth/ChangePassword'
-import Cart from './Pages/Home/Cart'
-import Wishlist from './Pages/Home/wishlist'
+import Cart from './Pages/User/Cart'
+import Wishlist from './Pages/User/Wishlist'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Allproducts from './Pages/Home/AllProducts'
 import ProductbyCategory from './Pages/Home/ProductsbyCategory'
@@ -15,6 +15,8 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import ForgetPassword from './Pages/Auth/ForgetPassword'
 import Verifyotp from './Pages/Auth/Verifyotp'
+import Profile from './Pages/User/Profile'
+import Orders from './Pages/User/Orders'
 
 export default function AppWrapper() {
   return (
@@ -51,6 +53,8 @@ const App = () => {
             <Route path='/logout' element={<Logout />} />
             <Route path='/forgetpassword' element={< ForgetPassword />} />
             <Route path='/verifyotp' element={<Verifyotp />} />
+            <Route path='/profile' element={<Profile />} />
+            <Route path='/orders' element={<Orders />} />
 
           </Routes>
         </div>
