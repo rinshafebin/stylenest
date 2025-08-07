@@ -57,7 +57,6 @@ export default function Cart() {
       <Navbar />
       <section className="py-12 bg-white min-h-screen">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-10 text-gray-800 text-center">Shopping Cart</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Cart Items */}
             <div className="md:col-span-2 space-y-6">
