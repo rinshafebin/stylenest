@@ -66,7 +66,7 @@ export default function Cart() {
                   <p className="text-gray-500 mb-6">Looks like you haven’t added anything yet.</p>
                   <button
                     onClick={() => navigate('/products')}
-                    className="bg-gradient-to-r from-rose-400 to-rose-500 text-white px-5 py-2 rounded-xl hover:opacity-90 transition"
+                    className="bg-rose-500  text-white px-5 py-2 rounded-xl hover:bg-rose-700 shadow-lg"
                   >
                     Start Shopping
                   </button>
@@ -130,7 +130,7 @@ export default function Cart() {
                 <span>Total Price</span>
                 <span>₹{totalPrice}</span>
               </div>
-              <button className="w-full bg-gradient-to-r from-rose-400 to-rose-500 text-white py-2 px-4 rounded-xl hover:opacity-90 transition">
+              <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-xl hover:bg-rose-700 shadow-lg">
                 Proceed to Checkout
               </button>
             </div>

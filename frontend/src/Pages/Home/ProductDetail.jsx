@@ -84,7 +84,7 @@ export default function ProductDetails() {
 
           {/* Price */}
           <div className="mt-4">
-            <span className="text-3xl font-bold text-pink-600">
+            <span className="text-3xl font-bold text-rose-600">
               ₹{product.price}
             </span>
           </div>
@@ -105,8 +105,8 @@ export default function ProductDetails() {
                     onClick={() => setSelectedSize(size)}
                     className={`border px-4 py-2 rounded-lg transition ${
                       selectedSize === size
-                        ? "border-pink-500 bg-pink-100"
-                        : "border-gray-300 hover:border-pink-500"
+                        ? "border-rose-500 bg-rose-100"
+                        : "border-gray-300 hover:border-rose-500"
                     }`}
                   >
                     {size}
@@ -120,14 +120,14 @@ export default function ProductDetails() {
           <div className="flex items-center space-x-4 mt-8">
             <button
               onClick={handleAddToCart}
-              className="flex items-center bg-pink-600 text-white px-6 py-3 rounded-xl hover:bg-pink-700 shadow-lg"
+              className="flex items-center bg-rose-600 text-white px-6 py-3 rounded-xl hover:bg-rose-700 shadow-lg"
             >
               <ShoppingBag className="mr-2" /> Add to Cart
             </button>
 
             <button
               onClick={handleAddToWishlist}
-              className="p-3 border border-gray-300 rounded-xl hover:border-pink-500"
+              className="p-3 border border-gray-300 rounded-xl hover:border-rose-500"
             >
               <Heart />
             </button>

@@ -62,11 +62,12 @@ export default function ProductCard({ product }) {
             <span className="text-lg font-bold text-rose-500">₹{product.price}</span>
           </Link>
           <button
-              onClick={handleAddToCart}
-              className="flex items-center bg-pink-600 text-white px-6 py-3 rounded-xl hover:bg-pink-700 shadow-lg"
-            >
-              <ShoppingBag className="mr-2" /> Add to Cart
-            </button>
+            onClick={handleAddToCart}
+            className="flex items-center bg-rose-500 text-white text-sm px-3 py-2 rounded-lg hover:bg-rose-600 shadow-md"
+          >
+            <ShoppingBag size={14} className="mr-1" /> Add to cart
+          </button>
+
         </div>
       </div>
     </div>
