@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Search, User, Heart, ShoppingBag, LogOut,ClipboardList, } from 'lucide-react';
+import { Search, User, Heart, ShoppingBag, LogOut, ClipboardList, } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import axiosInstance from '../../api/axios';
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults , setsearchResults]=useState([])
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    navigate(`/products?search=${searchQuery}`);
-  };
 
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token');
@@ -24,13 +22,25 @@ const Navbar = () => {
     }
   }, [location]);
 
-  const handleLogout = () => {
-    navigate('/logout');
-  };
 
-  const handleLogin = () => {
-    navigate('/login');
-  };
+  const handleLogout = () => navigate('/logout');
+  const handleLogin = () => navigate('/login');
+
+  useEffect(()=>{
+    const fetchResults = async ()=>{
+      if(searchTerm.trim()===""){
+        setsearchResults([]);
+        return;
+
+      }try{
+const response = await axiosInstance.get()
+      }catch(error){
+
+      }
+    }
+  })
+
+
 
   return (
     <header className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
@@ -68,21 +78,33 @@ const Navbar = () => {
           <div className="flex items-center space-x-3">
 
             {/* Search Bar */}
-            <form
-              onSubmit={handleSearchSubmit}
-              className="hidden sm:flex items-center bg-white border border-gray-300 rounded-full px-4 py-1 shadow-sm focus-within:ring-2 focus-within:ring-rose-500 transition-all duration-200"
-            >
-              <input
-                type="text"
-                placeholder="Search for products..."
-                className="bg-transparent text-sm text-gray-800 placeholder-gray-400 focus:outline-none px-2 py-1 w-40 md:w-64 transition-all duration-200"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <button type="submit" className="ml-2">
-                <Search className="w-5 h-5 text-gray-600 hover:text-rose-600 transition" />
-              </button>
-            </form>
+              <form
+                onSubmit={handleSearchSubmit}
+                className="flex items-center bg-white border border-gray-300 rounded-full px-3 py-1 shadow-sm focus-within:ring-2 focus-within:ring-rose-500 transition-all duration-200 w-fit"
+              >
+                <input
+                  type="text"
+                  placeholder="Search for products..."
+                  className="bg-transparent text-sm text-gray-800 placeholder-gray-400 focus:outline-none px-1 py-1 w-40 md:w-64 transition-all duration-200"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button type="submit" className="ml-1">
+                  <Search className="w-5 h-5 text-gray-600 hover:text-rose-600 transition" />
+                </button>
+              </form>
+
+              <ul className="mt-4">
+                {filteredProducts.length > 0 ? (
+                  filteredProducts.map((product) => (
+                    <li key={product.id} className="text-gray-700">
+                      {product.name}
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-500">No products found</li>
+                )}
+              </ul>
 
             {/* Wishlist Icon */}
             <Link to="/wishlist">
@@ -107,7 +129,7 @@ const Navbar = () => {
                 </div>
 
                 <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded shadow-lg opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200 z-50">
-                  <Link to="/account" className="flex items-center px-4 py-2 text-sm text-gray-800 hover:bg-gray-100">
+                  <Link to="/profile" className="flex items-center px-4 py-2 text-sm text-gray-800 hover:bg-gray-100">
                     <User className="w-4 h-4 mr-2" /> My Profile
                   </Link>
                   <Link to="/orders" className="flex items-center px-4 py-2 text-sm text-gray-800 hover:bg-gray-100">

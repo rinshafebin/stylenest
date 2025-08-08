@@ -17,6 +17,9 @@ import ForgetPassword from './Pages/Auth/ForgetPassword'
 import Verifyotp from './Pages/Auth/Verifyotp'
 import Profile from './Pages/User/Profile'
 import Orders from './Pages/User/Orders'
+import AdminHome from './Pages/Admin/AdminHome'
+import AddProduct from './Pages/Admin/AddProduct'
+import ProductSearch from './Components/Common/ProductSearch'
 
 export default function AppWrapper() {
   return (
@@ -55,6 +58,10 @@ const App = () => {
             <Route path='/verifyotp' element={<Verifyotp />} />
             <Route path='/profile' element={<Profile />} />
             <Route path='/orders' element={<Orders />} />
+            <Route path='/adminpanel' element={<AdminHome />} />
+            <Route path='/addproduct' element={< AddProduct/>} />
+            <Route path='/searchproduct' element={< ProductSearch />} />
+
 
           </Routes>
         </div>
