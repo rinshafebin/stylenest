@@ -13,6 +13,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['created_at', 'updated_at']
            
+    
     def validate_name(self, value):
         if not value:
             raise serializers.ValidationError('Product name is required')
@@ -20,10 +21,12 @@ class ProductSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Product must have at least 3 characters')
         return value
     
+    
     def validate_price(self, value):
         if value <= 0:
             raise serializers.ValidationError('Price must be positive')
         return value
+    
     
     def validate_stock(self, value):
         if value < 0:

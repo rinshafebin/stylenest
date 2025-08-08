@@ -3,7 +3,7 @@ import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 import axiosInstance from '../../api/axios'
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);

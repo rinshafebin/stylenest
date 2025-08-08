@@ -11,14 +11,14 @@ import Allproducts from './Pages/Home/AllProducts'
 import ProductbyCategory from './Pages/Home/ProductsbyCategory'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { setUpInterceptors } from './api/axios'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { Toaster } from 'react-hot-toast'
 import ForgetPassword from './Pages/Auth/ForgetPassword'
 import Verifyotp from './Pages/Auth/Verifyotp'
 import Profile from './Pages/User/Profile'
 import Orders from './Pages/User/Orders'
 import AdminHome from './Pages/Admin/AdminHome'
 import AddProduct from './Pages/Admin/AddProduct'
+import ProductDetails from './Pages/Home/ProductDetail'
 
 export default function AppWrapper() {
   return (
@@ -37,10 +37,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <div className="flex flex-col min-h-screen">
-        <ToastContainer
-          position="bottom-right"
-          autoClose={200}
-        />
+        <Toaster position="bottom-right" reverseOrder={false} />
 
         <div className="flex-grow">
           <Routes>
@@ -57,8 +54,13 @@ const App = () => {
             <Route path='/verifyotp' element={<Verifyotp />} />
             <Route path='/profile' element={<Profile />} />
             <Route path='/orders' element={<Orders />} />
+            <Route path='/productdetails/:id' element={<ProductDetails />} />
+
+
+
+            {/* admin side  */}
             <Route path='/adminpanel' element={<AdminHome />} />
-            <Route path='/addproduct' element={< AddProduct/>} />
+            <Route path='/addproduct' element={< AddProduct />} />
 
 
           </Routes>

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import axiosInstance from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify'; 
-import 'react-toastify/dist/ReactToastify.css';
+import toast from 'react-hot-toast';
+
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
