@@ -4,8 +4,8 @@ import axiosInstance from '../../api/axios';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
-export default function ProductCard({ product }) {
-  const [isWishlisted, setIsWishlisted] = useState(false);
+export default function ProductCard({ product, initialWishlisted = false }) {
+  const [isWishlisted, setIsWishlisted] = useState(initialWishlisted);
 
   const handleAddToCart = async () => {
     try {
@@ -18,11 +18,15 @@ export default function ProductCard({ product }) {
 
   const handleAddToWishlist = async () => {
     try {
-      await axiosInstance.post('/wishlist/items/', { product_id: product.id });
+      await axiosInstance.post('/wishlist/items/', { product: product.id });
       setIsWishlisted(true);
       toast.success('Product added to wishlist!');
     } catch (error) {
-      toast.error("You need to be logged in to use wishlist.");
+      if (error.response && error.response.status === 401) {
+        toast.error("You need to be logged in to use wishlist.");
+      } else {
+        toast.error("Something went wrong adding to wishlist.");
+      }
     }
   };
 
@@ -40,6 +44,7 @@ export default function ProductCard({ product }) {
         <button
           onClick={handleAddToWishlist}
           className="absolute top-2 right-2 bg-white p-1 rounded-full shadow hover:bg-pink-100"
+          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
           <Heart
             size={18}
@@ -67,7 +72,6 @@ export default function ProductCard({ product }) {
           >
             <ShoppingBag size={14} className="mr-1" /> Add to cart
           </button>
-
         </div>
       </div>
     </div>

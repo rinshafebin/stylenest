@@ -62,6 +62,7 @@ export default function Cart() {
             <div className="md:col-span-2 space-y-6">
               {cartItems.length === 0 ? (
                 <div className="flex flex-col items-center justify-center text-center py-20">
+                  <div className="text-6xl mb-6">🛍️</div>
                   <h3 className="text-2xl font-semibold text-gray-700 mb-2">Your cart is empty</h3>
                   <p className="text-gray-500 mb-6">Looks like you haven’t added anything yet.</p>
                   <button
