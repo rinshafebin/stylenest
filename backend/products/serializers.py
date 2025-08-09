@@ -34,3 +34,4 @@ class ProductSerializer(serializers.ModelSerializer):
         return value
 
 
+# -------------------------------------------------------------------------------------

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Heart, ChevronLeft } from 'lucide-react';
+import { ChevronLeft, ShoppingBag } from 'lucide-react';
 import Navbar from '../../Components/Common/Navbar';
 import axiosInstance from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../../Components/Common/Footer';
+import toast from 'react-hot-toast';
 
 const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
@@ -13,7 +14,7 @@ const Wishlist = () => {
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
-        const response = await axiosInstance.get('/wishlist/items/');
+        const response = await axiosInstance.get('/wishlist/list/');
         setWishlistItems(response.data);
       } catch (error) {
         console.error('Error fetching wishlist:', error);
@@ -31,21 +32,39 @@ const Wishlist = () => {
 
   const handleAddToCart = async (productId) => {
     try {
-      await axiosInstance.post('/cart/add/', { product_id: productId });
-      alert('Item added to cart!');
+      await axiosInstance.post('/cart/add/', { product: productId });
+      toast.success('Item added to cart!');
+
     } catch (error) {
-      console.error('Error adding to cart:', error);
+      toast.error('Error adding to cart');
+      console.error(error);
+    }
+  };
+
+
+  const handleRemoveFromWishlist = async (itemId, productId) => {
+    try {
+      await axiosInstance.delete(`/wishlist/remove/`, { data: { product: productId } });
+      setWishlistItems((prev) => prev.filter((item) => item.id !== itemId));
+      toast.success("Item removed from wishlist");
+    } catch (error) {
+      toast.error('Error removing from wishlist');
+      console.error(error);
     }
   };
 
   const handleMoveAllToCart = async () => {
     try {
-      for (const item of wishlistItems) {
-        await axiosInstance.post('/cart/add/', { product_id: item.product.id });
-      }
-      alert('All items moved to cart!');
+      const products = wishlistItems.map(item => ({
+        product_id: item.product.id,
+        quantity: 1
+      }))
+      await axiosInstance.post('/cart/add/', { items: products })
+      setWishlistItems([])
+      toast.success('All items moved to cart!');
     } catch (error) {
-      console.error('Error moving items:', error);
+      toast.error('Error moving items');
+      console.error(error);
     }
   };
 
@@ -60,7 +79,9 @@ const Wishlist = () => {
           <div className="text-center py-24">
             <div className="text-6xl mb-6">🛍️</div>
             <h2 className="text-2xl font-semibold text-black mb-2">Your wishlist is empty</h2>
-            <p className="text-gray-600 mb-6">Save your favorite items to easily find them later</p>
+            <p className="text-gray-600 mb-6">
+              Save your favorite items to easily find them later
+            </p>
             <button
               onClick={handleSubmit}
               className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-3 rounded-lg hover:opacity-90"
@@ -80,28 +101,30 @@ const Wishlist = () => {
                     <img
                       src={`http://localhost:8000${item.product.image}`}
                       alt={item.product.name}
-                      className="w-full h-64 object-cover rounded-t-2xl"
+                      className="w-full h-100 object-cover rounded-t-2xl"
                     />
-                    <button
-                      className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:bg-gray-100"
-                    >
-                      <Heart className="w-5 h-5 text-rose-500" />
-                    </button>
                   </div>
                   <div className="p-4">
-                    <h3 className="text-lg font-semibold text-black mb-1">{item.product.name}</h3>
-                    <p className="text-gray-600 mb-3">${item.product.price.toFixed(2)}</p>
-                    <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-semibold text-black mb-1">
+                      {item.product.name}
+                    </h3>
+                    <p className="text-gray-600 mb-3">${item.product.price}</p>
+
+                    <div className="flex gap-2">
                       <button
-                        onClick={() => handleAddToCart(item.product.id)}
-                        disabled={!item.product.inStock}
-                        className={`flex-1 py-2 rounded-lg text-white ${
-                          item.product.inStock
-                            ? 'bg-gradient-to-r from-rose-500 to-pink-500 hover:opacity-90'
-                            : 'bg-gray-300 cursor-not-allowed'
-                        }`}
+                        onClick={() => handleRemoveFromWishlist(item.id, item.product.id)}
+                        className="bg-rose-100 text-rose-600 px-4 py-2 rounded-lg hover:bg-rose-200 flex-1"
                       >
-                        {item.product.inStock ? 'Add to Cart' : 'Out of Stock'}
+                        Remove
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          handleAddToCart(item.product.id)
+                        }
+                        className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:opacity-90 flex-1"
+                      >
+                        Add to Cart
                       </button>
                     </div>
                   </div>
@@ -119,14 +142,16 @@ const Wishlist = () => {
               </button>
               <button
                 onClick={handleMoveAllToCart}
-                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-lg hover:opacity-90"
+                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-lg hover:opacity-90 flex items-center gap-2"
               >
+                <ShoppingBag className="w-5 h-5" />
                 Move All to Cart
               </button>
             </div>
           </>
         )}
       </div>
+
       <Footer />
     </div>
   );

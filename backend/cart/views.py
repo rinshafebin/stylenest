@@ -10,8 +10,10 @@ from Products.models import Product
 class AddToCartView(APIView):
     permission_classes = [IsAuthenticated]
     
+    # --------- create new cart  item -----------
+    
     def post(self,request):
-        print("🔐 Backend received Authorization:", request.META.get('HTTP_AUTHORIZATION'))
+        # print("🔐 Backend received Authorization:", request.META.get('HTTP_AUTHORIZATION'))
 
         product_id =request.data.get("product_id")
         quantity = int(request.data.get("quantity",1))
@@ -36,6 +38,9 @@ class AddToCartView(APIView):
         serializer = CartItemSerializer(cart_item) 
         return Response({"message": "Item added to cart", "cart_item": serializer.data}, status=status.HTTP_201_CREATED)
 
+
+# ---------------  cart list -----------------------
+
 class CartListView(APIView):
     permission_classes=[IsAuthenticated]
     
@@ -44,6 +49,8 @@ class CartListView(APIView):
         serializer = CartItemSerializer(cart_items,many=True)
         return Response(serializer.data)
     
+
+ # ------------------ update cart  item --------------
 
 class UpdateCartItemView(APIView):
     permission_classes = [IsAuthenticated]
@@ -66,6 +73,8 @@ class UpdateCartItemView(APIView):
         return Response({"message": "Cart item updated", "updated_item": serializer.data})
 
 
+# -------------- remove cart  item ----------------------
+
 class RemoveCartItemView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -77,3 +86,5 @@ class RemoveCartItemView(APIView):
 
         cart_item.delete()
         return Response({"message": "Item removed from cart"})
+
+# ----------------------------------------------------

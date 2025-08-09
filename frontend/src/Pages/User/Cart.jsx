@@ -4,6 +4,8 @@ import Footer from '../../Components/Common/Footer';
 import { Trash2 } from 'lucide-react';
 import axiosInstance from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -41,6 +43,7 @@ export default function Cart() {
   const handleRemove = async (id) => {
     try {
       await axiosInstance.delete(`cart/remove/${id}/`);
+      toast.success("Product removed ")
       fetchCartItems();
     } catch (error) {
       console.error('Error removing item:', error);
