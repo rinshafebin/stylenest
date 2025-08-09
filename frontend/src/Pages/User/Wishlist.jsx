@@ -30,23 +30,23 @@ const Wishlist = () => {
     navigate('/products');
   };
 
-  const handleAddToCart = async (productId) => {
+  const handleAddToCart = async (productId, itemId) => {
     try {
-      await axiosInstance.post('/cart/add/', { product: productId });
+      await axiosInstance.post('/cart/add/', { product_id: productId, quantity: 1 });
+      await axiosInstance.delete(`/wishlist/remove/${productId}/`);
+      setWishlistItems((prev) => prev.filter((item) => item.id !== itemId));
       toast.success('Item added to cart!');
-
     } catch (error) {
       toast.error('Error adding to cart');
       console.error(error);
     }
   };
 
-
-  const handleRemoveFromWishlist = async (itemId, productId) => {
+  const handleRemoveFromWishlist = async (itemId, product_id) => {
     try {
-      await axiosInstance.delete(`/wishlist/remove/`, { data: { product: productId } });
+      await axiosInstance.delete(`/wishlist/remove/${product_id}/`);
       setWishlistItems((prev) => prev.filter((item) => item.id !== itemId));
-      toast.success("Item removed from wishlist");
+      toast.success('Item removed from wishlist');
     } catch (error) {
       toast.error('Error removing from wishlist');
       console.error(error);
@@ -55,12 +55,15 @@ const Wishlist = () => {
 
   const handleMoveAllToCart = async () => {
     try {
-      const products = wishlistItems.map(item => ({
-        product_id: item.product.id,
-        quantity: 1
-      }))
-      await axiosInstance.post('/cart/add/', { items: products })
-      setWishlistItems([])
+      const requests = wishlistItems.map((item) => {
+        return Promise.all([
+          axiosInstance.post('/cart/add/', { product_id: item.product.id, quantity: 1 }),
+          axiosInstance.delete(`/wishlist/remove/${item.product.id}/`)
+        ]);
+      });
+
+      await Promise.all(requests);
+      setWishlistItems([]);
       toast.success('All items moved to cart!');
     } catch (error) {
       toast.error('Error moving items');
@@ -119,9 +122,7 @@ const Wishlist = () => {
                       </button>
 
                       <button
-                        onClick={() =>
-                          handleAddToCart(item.product.id)
-                        }
+                        onClick={() => handleAddToCart(item.product.id, item.id)}
                         className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:opacity-90 flex-1"
                       >
                         Add to Cart

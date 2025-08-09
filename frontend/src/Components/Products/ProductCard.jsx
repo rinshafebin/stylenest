@@ -18,7 +18,8 @@ export default function ProductCard({ product, initialWishlisted = false }) {
 
   const handleAddToWishlist = async () => {
     try {
-      await axiosInstance.post('/wishlist/create/', { product: product.id });
+      await axiosInstance.post('/wishlist/create/', { product_id: product.id });
+      console.log(product); 
       setIsWishlisted(true);
       toast.success('Product added to wishlist!');
     } catch (error) {

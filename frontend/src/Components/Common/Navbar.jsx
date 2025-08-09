@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, User, Heart, ShoppingBag, LogOut, ClipboardList, } from 'lucide-react';
+import { Search, User, Heart, ShoppingBag, LogOut, ClipboardList,Key } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axiosInstance from '../../api/axios';
 
@@ -151,6 +151,9 @@ const Navbar = () => {
                   </Link>
                   <Link to="/wishlist" className="flex items-center px-4 py-2 text-sm text-gray-800 hover:bg-gray-100">
                     <Heart className="w-4 h-4 mr-2" /> Wishlist
+                  </Link>
+                  <Link to="/changepassword" className="flex items-center px-4 py-2 text-sm text-gray-800 hover:bg-gray-100">
+                    <Key className="w-4 h-4 mr-2" /> Change Password
                   </Link>
 
                   <button
