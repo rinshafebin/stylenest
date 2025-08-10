@@ -3,7 +3,7 @@ import Navbar from '../../Components/Common/Navbar';
 import Footer from '../../Components/Common/Footer';
 import { Trash2 } from 'lucide-react';
 import axiosInstance from '../../api/axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 export default function Cart() {
@@ -26,13 +26,11 @@ export default function Cart() {
   const handleQuantityChange = async (id, action) => {
     try {
       const item = cartItems.find((i) => i.id === id);
-      const newqty = action === 'increase' ? item.quantity + 1 : item.quantity - 1;
+      const newQty = action === 'increase' ? item.quantity + 1 : item.quantity - 1;
 
-      if (newqty <= 0) return handleRemove(id);
+      if (newQty <= 0) return handleRemove(id);
 
-      await axiosInstance.put(`cart/update/${id}/`, {
-        quantity: newqty,
-      });
+      await axiosInstance.put(`cart/update/${id}/`, { quantity: newQty });
       fetchCartItems();
     } catch (error) {
       console.error('Error updating quantity:', error);
@@ -42,7 +40,7 @@ export default function Cart() {
   const handleRemove = async (id) => {
     try {
       await axiosInstance.delete(`cart/remove/${id}/`);
-      toast.success("Product removed");
+      toast.success('Product removed');
       fetchCartItems();
     } catch (error) {
       console.error('Error removing item:', error);
@@ -59,7 +57,7 @@ export default function Cart() {
       handleRemove(item.id);
     } catch (error) {
       console.error('Error placing order:', error);
-      toast.error("Failed to place order");
+      toast.error('Failed to place order');
     }
   };
 
@@ -71,20 +69,21 @@ export default function Cart() {
   return (
     <>
       <Navbar />
-      <section className="py-12 bg-white min-h-screen">
+      <section className="py-12 bg-gray-50 min-h-screen">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
+          <h2 className="text-2xl font-bold text-gray-800 mb-8">Shopping Cart</h2>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
-            <div className="md:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-5">
               {cartItems.length === 0 ? (
-                <div className="flex flex-col items-center justify-center text-center py-20">
-                  <div className="text-6xl mb-6">🛍️</div>
-                  <h3 className="text-2xl font-semibold text-gray-700 mb-2">Your cart is empty</h3>
+                <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl shadow">
+                  <div className="text-6xl mb-4">🛍️</div>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">Your cart is empty</h3>
                   <p className="text-gray-500 mb-6">Looks like you haven’t added anything yet.</p>
                   <button
                     onClick={() => navigate('/products')}
-                    className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-5 py-2 rounded-xl hover:opacity-90 shadow-lg transition"
+                    className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-lg hover:opacity-90 shadow-lg transition"
                   >
                     Start Shopping
                   </button>
@@ -93,81 +92,102 @@ export default function Cart() {
                 cartItems.map((item) => (
                   <div
                     key={item.id}
-                    className="flex flex-col bg-white border border-gray-200 rounded-2xl p-4 shadow-sm min-h-[14rem]"
+                    className="flex flex-col md:flex-row bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden"
                   >
-                    {/* Product Info */}
-                    <div className="flex gap-4">
+                    {/* Image */}
+                    <div className="md:w-40 w-full h-40 md:h-auto flex-shrink-0">
                       <img
                         src={`http://localhost:8000${item.product.image}`}
                         alt={item.product.name}
-                        className="w-24 h-30 rounded-xl object-cover border"
+                        className="w-full h-full object-cover"
                       />
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          {item.product.name}
-                        </h3>
-                        <p className="text-sm text-gray-600">₹{item.product.price}</p>
-                        <p className="text-xs text-gray-500">Delivery by Fri Aug 15</p>
-                      </div>
                     </div>
 
-                    {/* Quantity + Remove */}
-                    <div className="flex items-center justify-between mt-3">
-                      <div className="flex items-center border border-rose-300 rounded-xl overflow-hidden">
+                    {/* Details */}
+                    <div className="flex flex-col justify-between p-4 flex-1">
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">{item.product.name}</h3>
+                        <p className="text-sm text-gray-500 mt-1">Delivery by Fri Aug 15</p>
+                        <p className="text-base font-medium text-rose-500 mt-2">₹{item.product.price}</p>
+                      </div>
+
+                      {/* Controls */}
+                      <div className="flex items-center justify-between mt-4">
+                        <div className="flex items-center border border-rose-300 rounded-lg overflow-hidden">
+                          <button
+                            onClick={() => handleQuantityChange(item.id, 'decrease')}
+                            className="px-3 py-1 text-rose-500 font-bold hover:bg-rose-50"
+                          >
+                            −
+                          </button>
+                          <span className="px-4 py-1 text-gray-800 bg-white">{item.quantity}</span>
+                          <button
+                            onClick={() => handleQuantityChange(item.id, 'increase')}
+                            className="px-3 py-1 text-rose-500 font-bold hover:bg-rose-50"
+                          >
+                            +
+                          </button>
+                        </div>
+
                         <button
-                          onClick={() => handleQuantityChange(item.id, 'decrease')}
-                          className="px-3 py-1 text-rose-500 font-bold hover:bg-rose-100 transition"
+                          onClick={() => handleRemove(item.id)}
+                          className="text-rose-500 hover:text-rose-700 transition"
                         >
-                          −
-                        </button>
-                        <span className="px-4 py-1 text-gray-800 bg-white">{item.quantity}</span>
-                        <button
-                          onClick={() => handleQuantityChange(item.id, 'increase')}
-                          className="px-3 py-1 text-rose-500 font-bold hover:bg-rose-100 transition"
-                        >
-                          +
+                          <Trash2 size={20} />
                         </button>
                       </div>
+
+
                       <button
-                        onClick={() => handleRemove(item.id)}
-                        className="text-rose-500 hover:text-rose-700 transition"
+                        onClick={() => navigate('/checkout')}
+                        className="mt-6 w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg hover:opacity-90 shadow-md font-medium"
                       >
-                        <Trash2 size={20} />
+                        Proceed to Checkout
                       </button>
                     </div>
-
-                    {/* Place Order Button at Bottom */}
-                    <button
-                      onClick={() => handlePlaceOrder(item)}
-                      className="mt-auto w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 rounded-lg hover:opacity-90 shadow font-medium"
-                    >
-                      Place Order
-                    </button>
                   </div>
                 ))
               )}
             </div>
 
             {/* Order Summary */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">Order Summary</h3>
-              <div className="flex justify-between text-gray-700 mb-2">
-                <span>Total Items</span>
-                <span>{cartItems.reduce((total, item) => total + item.quantity, 0)}</span>
-              </div>
-              <div className="flex justify-between text-gray-700 mb-6">
-                <span>Total Price</span>
-                <span>₹{totalPrice}</span>
-              </div>
-              
-              <Link to={"/checkout"}>
-                <button
-                  className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 px-4 rounded-xl hover:opacity-90 shadow-lg transition"
+            {cartItems.length > 0 && (
+              <div className="bg-white rounded-xl shadow-lg p-6 sticky top-24 self-start border border-gray-100">
+                <h3 className="text-xl font-semibold text-gray-800 mb-5">Order Summary</h3>
+
+                <div className="space-y-3">
+                  <div className="flex justify-between text-gray-600">
+                    <span>Subtotal</span>
+                    <span>₹{totalPrice}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-600">
+                    <span>Shipping</span>
+                    <span className="text-green-600 font-medium">Free</span>
+                  </div>
+                  <div className="flex justify-between text-gray-600">
+                    <span>Total Items</span>
+                    <span>{cartItems.reduce((total, item) => total + item.quantity, 0)}</span>
+                  </div>
+                </div>
+
+                <hr className="my-4 border-gray-200" />
+
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-semibold text-gray-800">Total</span>
+                  <span className="text-lg font-bold bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
+                    ₹{totalPrice}
+                  </span>
+                </div>
+
+                {/* <button
+                  onClick={() => navigate('/checkout')}
+                  className="mt-6 w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg hover:opacity-90 shadow-md font-medium"
                 >
                   Proceed to Checkout
-                </button>
-              </Link>
-            </div>
+                </button> */}
+              </div>
+            )}
+
           </div>
         </div>
       </section>
