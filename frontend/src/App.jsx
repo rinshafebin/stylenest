@@ -19,6 +19,7 @@ import Orders from './Pages/User/Orders'
 import AdminHome from './Pages/Admin/AdminHome'
 import AddProduct from './Pages/Admin/AddProduct'
 import ProductDetails from './Pages/Home/ProductDetail'
+import Checkout from './Pages/User/Checkout'
 
 export default function AppWrapper() {
   return (
@@ -55,6 +56,7 @@ const App = () => {
             <Route path='/profile' element={<Profile />} />
             <Route path='/orders' element={<Orders />} />
             <Route path='/productdetails/:id' element={<ProductDetails />} />
+            <Route path='/checkout' element={<Checkout />} />
 
 
 
