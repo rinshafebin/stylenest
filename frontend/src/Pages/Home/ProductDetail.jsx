@@ -59,9 +59,8 @@ export default function ProductDetails() {
     <div className="bg-white min-h-screen">
       <Navbar />
 
-      {/* Container */}
       <div className="container mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-2 gap-10">
-        {/* Left - Product Image */}
+
         <div className="flex justify-center">
           <img
             src={`http://localhost:8000${product.image}`}
@@ -70,11 +69,11 @@ export default function ProductDetails() {
           />
         </div>
 
-        {/* Right - Product Info */}
+      
         <div className="flex flex-col justify-center">
           <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
 
-          {/* Rating */}
+
           <div className="flex items-center mt-4 space-x-2">
             <span className="text-yellow-500 text-xl">★</span>
             <span className="text-gray-600">
@@ -82,19 +81,15 @@ export default function ProductDetails() {
             </span>
           </div>
 
-          {/* Price */}
-          <div className="mt-4">
-            <span className="text-3xl font-bold text-rose-600">
-              ₹{product.price}
-            </span>
-          </div>
+          <span className="text-3xl font-bold bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent font-extrabold">
+            ₹{product.price}
+          </span>
 
-          {/* Description */}
           <p className="text-gray-600 mt-6 leading-relaxed">
             {product.description}
           </p>
 
-          {/* Size Selection */}
+
           {Array.isArray(product.sizes) && product.sizes.length > 0 && (
             <div className="mt-6">
               <h3 className="text-gray-700 font-semibold mb-2">Select Size</h3>
@@ -103,11 +98,10 @@ export default function ProductDetails() {
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`border px-4 py-2 rounded-lg transition ${
-                      selectedSize === size
+                    className={`border px-4 py-2 rounded-lg transition ${selectedSize === size
                         ? "border-rose-500 bg-rose-100"
                         : "border-gray-300 hover:border-rose-500"
-                    }`}
+                      }`}
                   >
                     {size}
                   </button>
@@ -116,18 +110,18 @@ export default function ProductDetails() {
             </div>
           )}
 
-          {/* Action Buttons */}
+
           <div className="flex items-center space-x-4 mt-8">
             <button
               onClick={handleAddToCart}
-              className="flex items-center bg-rose-600 text-white px-6 py-3 rounded-xl hover:bg-rose-700 shadow-lg"
+              className="flex items-center bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-3 rounded-xl hover:opacity-90 transition shadow-lg"
             >
               <ShoppingBag className="mr-2" /> Add to Cart
             </button>
 
             <button
               onClick={handleAddToWishlist}
-              className="p-3 border border-gray-300 rounded-xl hover:border-rose-500"
+              className="p-3 border-2 border-rose-500 text-rose-600 rounded-xl hover:bg-rose-100 transition"
             >
               <Heart />
             </button>
@@ -135,7 +129,7 @@ export default function ProductDetails() {
         </div>
       </div>
 
-      {/* More Details */}
+
       {Array.isArray(product.details) && product.details.length > 0 && (
         <div className="container mx-auto px-6 py-10 border-t border-gray-200">
           <h2 className="text-xl font-semibold mb-4">Product Details</h2>

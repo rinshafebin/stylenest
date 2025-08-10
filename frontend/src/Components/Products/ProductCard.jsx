@@ -19,7 +19,6 @@ export default function ProductCard({ product, initialWishlisted = false }) {
   const handleAddToWishlist = async () => {
     try {
       await axiosInstance.post('/wishlist/create/', { product_id: product.id });
-      console.log(product); 
       setIsWishlisted(true);
       toast.success('Product added to wishlist!');
     } catch (error) {
@@ -65,11 +64,13 @@ export default function ProductCard({ product, initialWishlisted = false }) {
 
         <div className="flex justify-between items-center mt-3">
           <Link to={`/productdetails/${product.id}`}>
-            <span className="text-lg font-bold text-rose-500">₹{product.price}</span>
+            <span className="text-lg font-extrabold bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
+              ₹{product.price}
+            </span>
           </Link>
           <button
             onClick={handleAddToCart}
-            className="flex items-center bg-rose-500 text-white text-sm px-3 py-2 rounded-lg hover:bg-rose-600 shadow-md"
+            className="flex items-center bg-gradient-to-r from-rose-500 to-pink-500 text-white text-sm px-3 py-2 rounded-lg hover:opacity-90 shadow-md transition"
           >
             <ShoppingBag size={14} className="mr-1" /> Add to cart
           </button>

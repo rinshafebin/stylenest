@@ -3,9 +3,8 @@ import Navbar from '../../Components/Common/Navbar';
 import Footer from '../../Components/Common/Footer';
 import { Trash2 } from 'lucide-react';
 import axiosInstance from '../../api/axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -43,10 +42,24 @@ export default function Cart() {
   const handleRemove = async (id) => {
     try {
       await axiosInstance.delete(`cart/remove/${id}/`);
-      toast.success("Product removed ")
+      toast.success("Product removed");
       fetchCartItems();
     } catch (error) {
       console.error('Error removing item:', error);
+    }
+  };
+
+  const handlePlaceOrder = async (item) => {
+    try {
+      await axiosInstance.post('/orders/create/', {
+        product: item.product.id,
+        quantity: item.quantity,
+      });
+      toast.success(`Order placed for ${item.product.name}`);
+      handleRemove(item.id);
+    } catch (error) {
+      console.error('Error placing order:', error);
+      toast.error("Failed to place order");
     }
   };
 
@@ -61,6 +74,7 @@ export default function Cart() {
       <section className="py-12 bg-white min-h-screen">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
             {/* Cart Items */}
             <div className="md:col-span-2 space-y-6">
               {cartItems.length === 0 ? (
@@ -70,7 +84,7 @@ export default function Cart() {
                   <p className="text-gray-500 mb-6">Looks like you haven’t added anything yet.</p>
                   <button
                     onClick={() => navigate('/products')}
-                    className="bg-rose-500  text-white px-5 py-2 rounded-xl hover:bg-rose-700 shadow-lg"
+                    className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-5 py-2 rounded-xl hover:opacity-90 shadow-lg transition"
                   >
                     Start Shopping
                   </button>
@@ -79,9 +93,10 @@ export default function Cart() {
                 cartItems.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between bg-white border border-gray-200 rounded-2xl p-4 shadow-sm min-h-[8rem]"
+                    className="flex flex-col bg-white border border-gray-200 rounded-2xl p-4 shadow-sm min-h-[14rem]"
                   >
-                    <div className="flex items-center gap-4">
+                    {/* Product Info */}
+                    <div className="flex gap-4">
                       <img
                         src={`http://localhost:8000${item.product.image}`}
                         alt={item.product.name}
@@ -92,10 +107,12 @@ export default function Cart() {
                           {item.product.name}
                         </h3>
                         <p className="text-sm text-gray-600">₹{item.product.price}</p>
+                        <p className="text-xs text-gray-500">Delivery by Fri Aug 15</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                      {/* Quantity Control */}
+
+                    {/* Quantity + Remove */}
+                    <div className="flex items-center justify-between mt-3">
                       <div className="flex items-center border border-rose-300 rounded-xl overflow-hidden">
                         <button
                           onClick={() => handleQuantityChange(item.id, 'decrease')}
@@ -118,6 +135,14 @@ export default function Cart() {
                         <Trash2 size={20} />
                       </button>
                     </div>
+
+                    {/* Place Order Button at Bottom */}
+                    <button
+                      onClick={() => handlePlaceOrder(item)}
+                      className="mt-auto w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 rounded-lg hover:opacity-90 shadow font-medium"
+                    >
+                      Place Order
+                    </button>
                   </div>
                 ))
               )}
@@ -134,9 +159,14 @@ export default function Cart() {
                 <span>Total Price</span>
                 <span>₹{totalPrice}</span>
               </div>
-              <button className="w-full bg-rose-500 text-white py-2 px-4 rounded-xl hover:bg-rose-700 shadow-lg">
-                Proceed to Checkout
-              </button>
+              
+              <Link to={"/checkout"}>
+                <button
+                  className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 px-4 rounded-xl hover:opacity-90 shadow-lg transition"
+                >
+                  Proceed to Checkout
+                </button>
+              </Link>
             </div>
           </div>
         </div>
