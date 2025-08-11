@@ -149,9 +149,6 @@ const Navbar = () => {
                   <Link to="/orders" className="flex items-center px-4 py-2 text-sm text-gray-800 hover:bg-gray-100">
                     <ClipboardList className="w-4 h-4 mr-2" /> Orders
                   </Link>
-                  <Link to="/wishlist" className="flex items-center px-4 py-2 text-sm text-gray-800 hover:bg-gray-100">
-                    <Heart className="w-4 h-4 mr-2" /> Wishlist
-                  </Link>
                   <Link to="/changepassword" className="flex items-center px-4 py-2 text-sm text-gray-800 hover:bg-gray-100">
                     <Key className="w-4 h-4 mr-2" /> Change Password
                   </Link>

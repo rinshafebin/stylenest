@@ -1,7 +1,20 @@
 import { User, Phone, MapPin, Home } from 'lucide-react';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import axiosInstance from '../../api/axios'
+import { useState } from 'react';
+
+
 
 export default function Checkout() {
+
+  const navigate = useNavigate()
+  const [fullname,setFullName] = useState('');
+  const [phone,setPhone] = useState('')
+  const [pincode,setPincode] = useState('')
+  const [city,setCity] =useState('')
+  const []
+
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <main className="flex-grow flex justify-center items-center py-12 px-4">

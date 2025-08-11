@@ -165,3 +165,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'your_email@gmail.com'        
 EMAIL_HOST_PASSWORD = 'your-app-password'     
+
+
+RAZORPAY_KEY_ID = 'rzp_test_pTWRHAgbdIDGhp'
+RAZORPAY_KEY_SECRET = 'fSSN3cj4wjMszLDL7a985AiG'

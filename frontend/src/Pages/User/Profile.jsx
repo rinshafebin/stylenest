@@ -30,7 +30,7 @@ const Profile = () => {
 
   const handleUpdate = async () => {
     try {
-      const res = await axiosInstance.put('user/profile/', formData);
+      const res = await axiosInstance.patch('user/profile/', formData);
       setUser(res.data.data);
       console.log(Request.data)
       localStorage.setItem('user', JSON.stringify(res.data.data));

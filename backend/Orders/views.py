@@ -7,6 +7,10 @@ from rest_framework import status
 from Products.models import Product
 # Create your views here.
 
+
+
+# ---------------- shipping address creating view --------------------------
+
 class ShippingAddressView(APIView):
     permission_classes = [IsAuthenticated]
     
@@ -16,6 +20,9 @@ class ShippingAddressView(APIView):
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+# ------------------- order creating view ----------------------------------
 
 class CreateOrderView(APIView):
     permission_classes = [IsAuthenticated]
@@ -29,14 +36,14 @@ class CreateOrderView(APIView):
             quantity =item['quantity'] 
             try :
                 product = Product.objects.get(id=product_id)
-                if Product.stock < quantity:
+                if product.stock < quantity:
                     return Response({'error': f'Not enough stock for {product.name}'}, status=status.HTTP_400_BAD_REQUEST)
-                total += Product.price*quantity
+                total += product.price*quantity
                 item['price'] = str(product.price)
             except Product.DoesNotExist:
                 return Response({'error': 'Invalid product'}, status=status.HTTP_400_BAD_REQUEST)
             
-        data['total_proce'] =total
+        data['total_price'] =total
         serializer =OrderSerializer(data = data)
         if serializer.is_valid():
             order = serializer.save()
@@ -50,3 +57,4 @@ class CreateOrderView(APIView):
     
        
         
+# --------------------------------------------------------------------------------------------
