@@ -7,9 +7,12 @@ class ShippingAddress(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     full_name = models.CharField(max_length=20)
     phone = models.CharField(max_length=10)
+    pincode = models.IntegerField()
     city = models.CharField(max_length=20)
     state = models.CharField(max_length=20)
-    postal_code = models.IntegerField()
+    house_name = models.CharField(max_length=200)
+    building = models.CharField(max_length=255)
+    
     
     def __str__(self):
         return self.full_name
