@@ -16,8 +16,6 @@ import ForgetPassword from './Pages/Auth/ForgetPassword'
 import Verifyotp from './Pages/Auth/Verifyotp'
 import Profile from './Pages/User/Profile'
 import Orders from './Pages/User/Orders'
-import AdminHome from './Pages/Admin/AdminHome'
-import AddProduct from './Pages/Admin/AddProduct'
 import ProductDetails from './Pages/Home/ProductDetail'
 import Checkout from './Pages/User/Checkout'
 import OrderSummary from './Pages/User/Ordersummary'
@@ -63,8 +61,8 @@ const App = () => {
 
 
             {/* admin side  */}
-            <Route path='/adminpanel' element={<AdminHome />} />
-            <Route path='/addproduct' element={< AddProduct />} />
+            {/* <Route path='/adminpanel' element={<AdminHome />} />
+            <Route path='/allproduct' element={< AllProductsAdmin />} /> */}
 
 
           </Routes>

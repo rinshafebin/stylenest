@@ -25,6 +25,8 @@ class ViewAllUsers(APIView):
         serializer = ViewAllUsersSerializer(users,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
     
+    
+    
 class UserDetail(APIView):
     permission_classes = [IsAdminUser]
 
@@ -38,19 +40,18 @@ class UserDetail(APIView):
 # ---------------------------------- product apis for CRUD ----------------------------------------------#
 
 
-class Products(APIView):
-    permission_classes = [IsAdminUser]
+class AllProducts(APIView):
+    # permission_classes = [IsAdminUser]
     
     def get(self, request):
         products = Product.objects.all()
-    
-        paginator = LimitOffsetPagination()
-        result_page = paginator.paginate_queryset(products, request)
-    
-        serializer = ProductSerializer(result_page, many=True)
-        return paginator.get_paginated_response(serializer.data)
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    
+
+
+class CreateProduct(APIView):
+    permission_classes = [IsAdminUser]
     def post(self, request):
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
@@ -81,7 +82,10 @@ class ProductDetails(APIView):
         serializer = ProductSerializer(product)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
-   
+
+class ProductUpdate(APIView):
+    permission_classes = [IsAdminUser]
+
     def put(self, request, pk):
         try:
             product = Product.objects.get(pk=pk)
@@ -100,7 +104,10 @@ class ProductDetails(APIView):
         except Product.DoesNotExist:
             return Response({'detail': 'Eror updating product'}, status=status.HTTP_404_NOT_FOUND)
 
-    
+
+class ProductDelete(APIView):
+    permission_classes = [IsAdminUser]
+
     def delete(self, request, pk):
         try:
             product = Product.objects.get(pk=pk)
@@ -132,10 +139,10 @@ class ViewProductsByCategory(APIView):
 
 # ----------------------------    all orders  --------------------------
 
-class AllOrders(APIView):
-    permission_classes = [IsAdminUser]
+# class AllOrders(APIView):
+#     permission_classes = [IsAdminUser]
 
-    def get(self, request):
-        orders = Order.objects.all().order_by('-created_at')
-        serializer = OrderSerializer(orders, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+#     def get(self, request):
+#         orders = Order.objects.all().order_by('-created_at')
+#         serializer = OrderSerializer(orders, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)

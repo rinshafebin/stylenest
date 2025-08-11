@@ -15,7 +15,6 @@ export default function AddProduct() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Product submitted:', form);
-    // You can replace this with API call later
   };
 
   return (
