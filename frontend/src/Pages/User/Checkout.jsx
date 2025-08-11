@@ -6,12 +6,12 @@ import { useState } from 'react';
 export default function Checkout() {
 
   const navigate = useNavigate()
-  const [fullName, setFullName] = useState('');
+  const [full_name, setFullName] = useState('');
   const [phone, setPhone] = useState('')
   const [pincode, setPincode] = useState('')
   const [state, setState] = useState('')
   const [city, setCity] = useState('')
-  const [houseNo, setHouseNo] = useState('')
+  const [house_name, setHouseName] = useState('')
   const [building, setBuilding] = useState('')
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -22,16 +22,16 @@ export default function Checkout() {
     setError(null)
 
     const shippingData = {
-      fullName,
+      full_name,
       phone,
       pincode,
       state,
       city,
-      houseNo,
+      house_name,
       building,
     }
     try {
-      const response = await axiosInstance.post('/orders/shipping-address/', shippingData)
+      const response = await axiosInstance.post('/order/shipping-address/', shippingData)
       navigate('/ordersummary')
     } catch (err) {
       setError('Failed to submit address. Please try again.');
@@ -66,7 +66,7 @@ export default function Checkout() {
                   type="text"
                   placeholder="Full name"
                   className="w-full focus:outline-none"
-                  value={fullName}
+                  value={full_name}
                   onChange={(e)=>setFullName(e.target.value)}
                   required
                 />
@@ -126,10 +126,10 @@ export default function Checkout() {
               <Home className="text-rose-500 mr-2" size={18} />
               <input
                 type="text"
-                placeholder="House No"
+                placeholder="House_name"
                 className="w-full focus:outline-none"
-                value={houseNo}
-                onChange={(e)=>setHouseNo(e.target.value)}
+                value={house_name}
+                onChange={(e)=>setHouseName(e.target.value)}
                 required
               />
             </div>
@@ -164,3 +164,4 @@ export default function Checkout() {
     </div>
   );
 }
+

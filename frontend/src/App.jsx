@@ -19,6 +19,8 @@ import Orders from './Pages/User/Orders'
 import ProductDetails from './Pages/Home/ProductDetail'
 import Checkout from './Pages/User/Checkout'
 import OrderSummary from './Pages/User/Ordersummary'
+import AdminHome from './Pages/AdminPanel/AdminHome'
+import AddProduct from './Pages/AdminPanel/Addproduct'
 
 export default function AppWrapper() {
   return (
@@ -56,13 +58,13 @@ const App = () => {
             <Route path='/orders' element={<Orders />} />
             <Route path='/productdetails/:id' element={<ProductDetails />} />
             <Route path='/checkout' element={<Checkout />} />
-            <Route path='/ordersummary' element={<OrderSummary />} />
+            {/* <Route path='/ordersummary' element={<OrderSummary />} /> */}
 
 
 
             {/* admin side  */}
-            {/* <Route path='/adminpanel' element={<AdminHome />} />
-            <Route path='/allproduct' element={< AllProductsAdmin />} /> */}
+            <Route path='/adminpanel' element={<AdminHome />} />
+            <Route path='/addproduct' element={< AddProduct />} />
 
 
           </Routes>
