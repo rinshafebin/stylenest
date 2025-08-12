@@ -18,9 +18,8 @@ from rest_framework.pagination import LimitOffsetPagination
 # --------------------------------------- user apis for viewing ------------------------------------------
 
 class ViewAllUsers(APIView):
-    # permission_classes = [IsAdminUser]
-    
-    
+    permission_classes = [IsAdminUser]
+      
     def get(self,request):
         print(request.data)
         users = CustomUser.objects.filter(is_superuser=False)
@@ -30,7 +29,7 @@ class ViewAllUsers(APIView):
     
     
 class UserDetail(APIView):
-    # permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
 
     def get(self,request,pk):
         user = CustomUser.objects.get(pk=pk)
@@ -43,7 +42,7 @@ class UserDetail(APIView):
 
 
 class AllProducts(APIView):
-    # permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
     
     def get(self, request):
         products = Product.objects.all()
@@ -53,7 +52,7 @@ class AllProducts(APIView):
 
 
 class CreateProduct(APIView):
-    # permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
     def post(self, request):
         print(request.data)
         serializer = ProductSerializer(data=request.data)
@@ -77,7 +76,7 @@ class CreateProduct(APIView):
 # ----------------------------- crud product --------------------------------
 
 class ProductDetails(APIView):
-    # permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
     parser_classes = [MultiPartParser, FormParser]
 
     def get(self,request,pk):
@@ -88,7 +87,7 @@ class ProductDetails(APIView):
 
 
 class ProductUpdate(APIView):
-    # permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
 
     def patch(self, request, pk):
         try:
@@ -110,7 +109,7 @@ class ProductUpdate(APIView):
 
 
 class ProductDelete(APIView):
-    # permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
 
     def delete(self, request, pk):
         try:
@@ -127,7 +126,7 @@ class ProductDelete(APIView):
 
 
 class ViewProductsByCategory(APIView):
-    # permission_classes = [IsAdminUser]     
+    permission_classes = [IsAdminUser]     
     
     def get(self, request, category):
         try:

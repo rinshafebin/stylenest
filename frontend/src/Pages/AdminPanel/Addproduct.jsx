@@ -62,11 +62,12 @@ export default function AddProduct() {
         const productData = new FormData();
         Object.keys(formData).forEach((key) => {
             if (Array.isArray(formData[key])) {
-                formData[key].forEach((item) => productData.append(key, item));
+                productData.append(key, formData[key].join(", "));
             } else {
                 productData.append(key, formData[key]);
             }
         });
+
 
         try {
             await axiosInstance.post("/adminside/createproducts/", productData, {

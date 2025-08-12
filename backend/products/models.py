@@ -20,7 +20,7 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(blank=True, unique=True)
     description = models.TextField()
-    details = models.TextField(null=True, blank=True)
+    details = models.JSONField(null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     # sizes = MultiSelectField(choices=SIZE_CHOICES, blank=True)

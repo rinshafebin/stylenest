@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Edit, Trash2, PlusCircle } from "lucide-react";
+import { Edit, Trash2, PlusCircle, Search } from "lucide-react"; // ✅ Added Search here
 import axiosInstance from "../../api/axios";
 import Sidebar from "../../Components/Admin/Sidebar";
 import Header from "../../Components/Admin/Header";
@@ -10,6 +10,7 @@ export default function AllProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // ✅ Added this
 
   useEffect(() => {
     fetchProducts();
@@ -42,6 +43,11 @@ export default function AllProducts() {
     }
   }
 
+  // ✅ Filter products by search term
+  const filteredProducts = products.filter((product) =>
+    product.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
@@ -50,8 +56,21 @@ export default function AllProducts() {
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <main className="p-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
             <h1 className="text-2xl font-bold">All Products</h1>
+
+            {/* Search Input */}
+            <div className="relative">
+              <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
+              />
+            </div>
+
             <Link
               to="/addproduct"
               className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:opacity-90 transition"
@@ -70,7 +89,7 @@ export default function AllProducts() {
             </div>
           )}
 
-          {!loading && products.length === 0 && !error && (
+          {!loading && filteredProducts.length === 0 && !error && (
             <div className="bg-white shadow rounded-lg p-6 text-center">
               <p className="text-gray-500 mb-4">No products found.</p>
               <Link
@@ -82,7 +101,7 @@ export default function AllProducts() {
             </div>
           )}
 
-          {!loading && products.length > 0 && (
+          {!loading && filteredProducts.length > 0 && (
             <div className="overflow-x-auto bg-white shadow rounded-lg">
               <table className="min-w-full table-auto">
                 <thead className="bg-gray-50 border-b sticky top-0">
@@ -111,7 +130,7 @@ export default function AllProducts() {
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map((product, idx) => (
+                  {filteredProducts.map((product, idx) => (
                     <tr
                       key={product.id}
                       className={`border-b ${

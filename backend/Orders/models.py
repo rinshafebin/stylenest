@@ -4,7 +4,7 @@ from Products.models import Product
 
 # Create your models here.
 class ShippingAddress(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=20)
     phone = models.CharField(max_length=10)
     pincode = models.IntegerField()
