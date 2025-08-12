@@ -13,9 +13,6 @@ urlpatterns = [
     path('user/', include('user.urls')),
     path('orders/', include('Orders.urls')),
 
-
-
-
 ]
 
 if settings.DEBUG:

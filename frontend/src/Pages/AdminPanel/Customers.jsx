@@ -1,51 +1,35 @@
 // src/pages/admin/Customers.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../Components/Admin/Header";
 import Sidebar from "../../Components/Admin/Sidebar";
 import { Search } from "lucide-react";
+import axiosInstance from "../../api/axios";
+import toast from "react-hot-toast";
 
 export default function Customers() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [customers, setCustomers] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const customers = [
-    {
-      id: 1,
-      name: "Aarav Sharma",
-      email: "aarav@example.com",
-      joinDate: "2024-05-12",
-      orders: 5,
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Priya Patel",
-      email: "priya@example.com",
-      joinDate: "2024-04-02",
-      orders: 2,
-      status: "Inactive",
-    },
-    {
-      id: 3,
-      name: "Rahul Verma",
-      email: "rahul@example.com",
-      joinDate: "2024-03-21",
-      orders: 8,
-      status: "Active",
-    },
-    {
-      id: 4,
-      name: "Sneha Nair",
-      email: "sneha@example.com",
-      joinDate: "2024-01-10",
-      orders: 1,
-      status: "Active",
-    },
-  ];
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const res = await axiosInstance.get("/adminside/allusers")
+        setCustomers(res.data)
+      } catch (error) {
+        toast.error("Error fetching customers");
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchCustomers();
+  }, []);
 
   const filteredCustomers = customers.filter(
     (customer) =>
-      customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -84,6 +68,7 @@ export default function Customers() {
                     <th className="px-6 py-3 font-medium">Name</th>
                     <th className="px-6 py-3 font-medium">Email</th>
                     <th className="px-6 py-3 font-medium">Join Date</th>
+                    <th className="px-6 py-3 font-medium">Phone</th>
                     <th className="px-6 py-3 font-medium">Orders</th>
                     <th className="px-6 py-3 font-medium">Status</th>
                   </tr>
@@ -95,18 +80,18 @@ export default function Customers() {
                       className="border-b border-gray-100 hover:bg-gray-50"
                     >
                       <td className="px-6 py-4 font-medium text-black">
-                        {customer.name}
+                        {customer.username}
                       </td>
                       <td className="px-6 py-4">{customer.email}</td>
-                      <td className="px-6 py-4">{customer.joinDate}</td>
+                      <td className="px-6 py-4">{customer.date_joined}</td>
+                      <td className="px-6 py-4">{customer.phone_number}</td>
                       <td className="px-6 py-4">{customer.orders}</td>
                       <td className="px-6 py-4">
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            customer.status === "Active"
-                              ? "bg-green-100 text-green-600"
-                              : "bg-red-100 text-red-600"
-                          }`}
+                          className={`px-3 py-1 rounded-full text-xs font-medium ${customer.status === "Active"
+                            ? "bg-green-100 text-green-600"
+                            : "bg-red-100 text-red-600"
+                            }`}
                         >
                           {customer.status}
                         </span>

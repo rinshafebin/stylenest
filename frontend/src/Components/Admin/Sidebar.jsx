@@ -10,7 +10,7 @@ const Sidebar = ({ sidebarOpen }) => {
   const location = useLocation();
 
   const sidebarItems = [
-    { icon: Home, label: 'Dashboard', path: '/admindashboard' },
+    { icon: Home, label: 'Dashboard', path: '/adminpanel' },
     { icon: Package, label: 'AddProducts', path: '/addproduct', count: '2.4k' },
     { icon: Package, label: 'Products', path: '/allproducts', count: '2.4k' },
     { icon: ShoppingBag, label: 'Orders', badge: '12', path: '/allorders' },

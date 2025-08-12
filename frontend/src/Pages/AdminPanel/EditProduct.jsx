@@ -33,7 +33,7 @@ export default function EditProduct() {
         category: res.data.category || "",
         price: res.data.price || "",
         stock: res.data.stock || "",
-        image: null, // file input empty initially
+        image: null,
       });
     } catch (err) {
       console.error(err);
@@ -68,7 +68,7 @@ export default function EditProduct() {
       });
 
       toast.success("Product updated successfully");
-      navigate("/admin/allproducts");
+      navigate("/allproducts");
     } catch (err) {
       console.error(err);
       toast.error("Failed to update product");

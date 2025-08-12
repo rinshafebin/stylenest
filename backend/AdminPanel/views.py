@@ -18,9 +18,11 @@ from rest_framework.pagination import LimitOffsetPagination
 # --------------------------------------- user apis for viewing ------------------------------------------
 
 class ViewAllUsers(APIView):
-    permission_classes = [IsAdminUser]
+    # permission_classes = [IsAdminUser]
+    
     
     def get(self,request):
+        print(request.data)
         users = CustomUser.objects.filter(is_superuser=False)
         serializer = ViewAllUsersSerializer(users,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
@@ -28,7 +30,7 @@ class ViewAllUsers(APIView):
     
     
 class UserDetail(APIView):
-    permission_classes = [IsAdminUser]
+    # permission_classes = [IsAdminUser]
 
     def get(self,request,pk):
         user = CustomUser.objects.get(pk=pk)
