@@ -53,6 +53,7 @@ class AllProducts(APIView):
 class CreateProduct(APIView):
     # permission_classes = [IsAdminUser]
     def post(self, request):
+        print(request.data)
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             validated_data = serializer.validated_data
@@ -63,7 +64,7 @@ class CreateProduct(APIView):
                 price = validated_data['price'],
                 category = validated_data['category'],
                 stock = validated_data.get('stock',0),
-                image = validated_data.get('image',None),
+                image = validated_data.get('image'),
                 
             )
             response_serializer = ProductSerializer(product)
@@ -74,7 +75,7 @@ class CreateProduct(APIView):
 # ----------------------------- crud product --------------------------------
 
 class ProductDetails(APIView):
-    permission_classes = [IsAdminUser]
+    # permission_classes = [IsAdminUser]
     parser_classes = [MultiPartParser, FormParser]
 
     def get(self,request,pk):
@@ -84,9 +85,9 @@ class ProductDetails(APIView):
 
 
 class ProductUpdate(APIView):
-    permission_classes = [IsAdminUser]
+    # permission_classes = [IsAdminUser]
 
-    def put(self, request, pk):
+    def patch(self, request, pk):
         try:
             product = Product.objects.get(pk=pk)
             serializer = ProductSerializer(product, data=request.data, partial=True)
@@ -106,7 +107,7 @@ class ProductUpdate(APIView):
 
 
 class ProductDelete(APIView):
-    permission_classes = [IsAdminUser]
+    # permission_classes = [IsAdminUser]
 
     def delete(self, request, pk):
         try:
@@ -123,7 +124,7 @@ class ProductDelete(APIView):
 
 
 class ViewProductsByCategory(APIView):
-    permission_classes = [IsAdminUser]     
+    # permission_classes = [IsAdminUser]     
     
     def get(self, request, category):
         try:

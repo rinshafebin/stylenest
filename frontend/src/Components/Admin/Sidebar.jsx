@@ -10,15 +10,12 @@ const Sidebar = ({ sidebarOpen }) => {
   const location = useLocation();
 
   const sidebarItems = [
-    { icon: Home, label: 'Dashboard', path: '/' },
-    { icon: Package, label: 'Products', path: '/addproduct', count: '2.4k' },
-    { icon: ShoppingBag, label: 'Orders', badge: '12', path: '/orders' },
-    { icon: Users, label: 'Customers', count: '892', path: '/customers' },
-    { icon: CreditCard, label: 'Payments', path: '/payments' },
-    { icon: Truck, label: 'Shipping', path: '/shipping' },
-    { icon: Star, label: 'Reviews', path: '/reviews' },
-    { icon: DollarSign, label: 'Discounts & Coupons', path: '/discounts' },
-    { icon: Settings, label: 'Store Settings', path: '/settings' }
+    { icon: Home, label: 'Dashboard', path: '/admindashboard' },
+    { icon: Package, label: 'AddProducts', path: '/addproduct', count: '2.4k' },
+    { icon: Package, label: 'Products', path: '/allproducts', count: '2.4k' },
+    { icon: ShoppingBag, label: 'Orders', badge: '12', path: '/allorders' },
+    { icon: Users, label: 'Customers', count: '892', path: '/allcustomers' },
+
   ];
 
   return (

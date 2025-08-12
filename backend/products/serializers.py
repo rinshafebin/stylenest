@@ -1,10 +1,6 @@
 from rest_framework import serializers
 from Products.models import Product
 
-
-
-# ----------------------- product serializer ----------------------------------------
-
 class ProductSerializer(serializers.ModelSerializer):
     category = serializers.ChoiceField(choices=Product.CATEGORY_CHOICES)
     
@@ -12,7 +8,6 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
         read_only_fields = ['created_at', 'updated_at']
-           
     
     def validate_name(self, value):
         if not value:
@@ -21,17 +16,12 @@ class ProductSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Product must have at least 3 characters')
         return value
     
-    
     def validate_price(self, value):
         if value <= 0:
             raise serializers.ValidationError('Price must be positive')
         return value
     
-    
     def validate_stock(self, value):
         if value < 0:
             raise serializers.ValidationError('Stock cannot be negative')
         return value
-
-
-# -------------------------------------------------------------------------------------

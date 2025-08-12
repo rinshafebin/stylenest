@@ -1,4 +1,5 @@
 from django.db import models
+from multiselectfield import MultiSelectField
 from django.utils.text import slugify
 
 class Product(models.Model):
@@ -7,23 +8,27 @@ class Product(models.Model):
         ('men', "Men's Collection"),
         ('kids', "Kids Collection"),
     ]
+    
+    # SIZE_CHOICES = [
+    #     ("XS", "XS"),
+    #     ("S", "S"),
+    #     ("M", "M"),
+    #     ("L", "L"),
+    #     ("XL", "XL"),
+    # ]
 
     name = models.CharField(max_length=200)
-    slug = models.SlugField(blank=True)
+    slug = models.SlugField(blank=True, unique=True)
     description = models.TextField()
+    details = models.TextField(null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES) 
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    # sizes = MultiSelectField(choices=SIZE_CHOICES, blank=True)
     stock = models.PositiveIntegerField(default=0)
-    image = models.ImageField(upload_to='products/')
-
-    rating = models.FloatField(default=0.0)  
-    reviews = models.PositiveIntegerField(default=0)  
-    sizes = models.JSONField(blank=True, default=list)  
-    details = models.JSONField(blank=True, default=list)  
-
+    image = models.ImageField(upload_to='products/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)

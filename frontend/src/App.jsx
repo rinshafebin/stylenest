@@ -19,8 +19,12 @@ import Orders from './Pages/User/Orders'
 import ProductDetails from './Pages/Home/ProductDetail'
 import Checkout from './Pages/User/Checkout'
 import OrderSummary from './Pages/User/Ordersummary'
-import AdminHome from './Pages/AdminPanel/AdminHome'
+import AdminHome from './Pages/AdminPanel/AdminDashboard'
 import AddProduct from './Pages/AdminPanel/Addproduct'
+import AdminDashboard from './Pages/AdminPanel/AdminDashboard'
+import Customers from './Pages/AdminPanel/Customers'
+import AllOrders from './Pages/AdminPanel/AllOrders'
+import AllProducts from './Pages/AdminPanel/AllProducts'
 
 export default function AppWrapper() {
   return (
@@ -63,8 +67,13 @@ const App = () => {
 
 
             {/* admin side  */}
-            <Route path='/adminpanel' element={<AdminHome />} />
+            <Route path='/adminpanel' element={<AdminDashboard />} />
             <Route path='/addproduct' element={< AddProduct />} />
+            <Route path='/allproducts' element={< AllProducts />} />
+
+            <Route path='/allcustomers' element={< Customers />} />
+            <Route path='/allorders' element={< AllOrders />} />
+
 
 
           </Routes>
