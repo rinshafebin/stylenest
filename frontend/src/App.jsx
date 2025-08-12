@@ -25,6 +25,7 @@ import AdminDashboard from './Pages/AdminPanel/AdminDashboard'
 import Customers from './Pages/AdminPanel/Customers'
 import AllOrders from './Pages/AdminPanel/AllOrders'
 import AllProducts from './Pages/AdminPanel/AllProducts'
+import EditProduct from './Pages/AdminPanel/EditProduct'
 
 export default function AppWrapper() {
   return (
@@ -70,11 +71,9 @@ const App = () => {
             <Route path='/adminpanel' element={<AdminDashboard />} />
             <Route path='/addproduct' element={< AddProduct />} />
             <Route path='/allproducts' element={< AllProducts />} />
-
             <Route path='/allcustomers' element={< Customers />} />
             <Route path='/allorders' element={< AllOrders />} />
-
-
+            <Route path='/editproduct/:id/' element={< EditProduct />} />
 
           </Routes>
         </div>

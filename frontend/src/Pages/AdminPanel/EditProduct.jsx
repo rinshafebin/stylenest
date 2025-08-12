@@ -3,7 +3,6 @@ import axiosInstance from "../../api/axios";
 import Sidebar from "../../Components/Admin/Sidebar";
 import Header from "../../Components/Admin/Header";
 import { useParams, useNavigate } from "react-router-dom";
-import { Upload } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function EditProduct() {
@@ -18,6 +17,7 @@ export default function EditProduct() {
     stock: "",
     image: null,
   });
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -27,13 +27,13 @@ export default function EditProduct() {
   async function fetchProduct() {
     setLoading(true);
     try {
-      const res = await axiosInstance.get(`/adminside/product/${id}/`);
+      const res = await axiosInstance.get(`/adminside/getproduct/${id}/`);
       setFormData({
-        name: res.data.name,
-        category: res.data.category,
-        price: res.data.price,
-        stock: res.data.stock,
-        image: null,
+        name: res.data.name || "",
+        category: res.data.category || "",
+        price: res.data.price || "",
+        stock: res.data.stock || "",
+        image: null, // file input empty initially
       });
     } catch (err) {
       console.error(err);
@@ -45,10 +45,10 @@ export default function EditProduct() {
 
   function handleChange(e) {
     const { name, value, files } = e.target;
-    if (files) {
-      setFormData((prev) => ({ ...prev, [name]: files[0] }));
+    if (name === "image") {
+      setFormData({ ...formData, image: files[0] });
     } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      setFormData({ ...formData, [name]: value });
     }
   }
 
@@ -58,10 +58,12 @@ export default function EditProduct() {
     try {
       const form = new FormData();
       Object.keys(formData).forEach((key) => {
-        if (formData[key] !== null) form.append(key, formData[key]);
+        if (formData[key] !== null) {
+          form.append(key, formData[key]);
+        }
       });
 
-      await axiosInstance.put(`/adminside/updateproduct/${id}/`, form, {
+      await axiosInstance.patch(`/adminside/updateproduct/${id}/`, form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -92,6 +94,7 @@ export default function EditProduct() {
               onSubmit={handleSubmit}
               className="bg-white shadow rounded-lg p-6 space-y-4"
             >
+              {/* Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Name
@@ -106,6 +109,7 @@ export default function EditProduct() {
                 />
               </div>
 
+              {/* Category */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Category
@@ -124,6 +128,7 @@ export default function EditProduct() {
                 </select>
               </div>
 
+              {/* Price & Stock */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
@@ -153,6 +158,7 @@ export default function EditProduct() {
                 </div>
               </div>
 
+              {/* Image */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Product Image
@@ -166,6 +172,7 @@ export default function EditProduct() {
                 />
               </div>
 
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}

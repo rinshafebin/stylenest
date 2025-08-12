@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, PlusCircle } from "lucide-react";
 import axiosInstance from "../../api/axios";
 import Sidebar from "../../Components/Admin/Sidebar";
 import Header from "../../Components/Admin/Header";
+import { Link } from "react-router-dom";
 
 export default function AllProducts() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -22,19 +23,11 @@ export default function AllProducts() {
       setProducts(res.data);
     } catch (err) {
       console.error(err);
-      setError(err?.response?.data?.detail || err.message || "Failed to load products");
+      setError(
+        err?.response?.data?.detail || err.message || "Failed to load products"
+      );
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function handleDelete(id) {
-    try {
-      await axiosInstance.patch(`/adminside/product/${id}/`);
-      setProducts((prev) => prev.filter((p) => p.id !== id));
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete product");
     }
   }
 
@@ -57,57 +50,89 @@ export default function AllProducts() {
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <main className="p-6">
-          <h1 className="text-2xl font-bold mb-4">All Products</h1>
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-2xl font-bold">All Products</h1>
+            <Link
+              to="/addproduct"
+              className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:opacity-90 transition"
+            >
+              <PlusCircle size={18} />
+              Add Product
+            </Link>
+          </div>
 
-          {loading && <p className="text-gray-500">Loading...</p>}
-          {error && <p className="text-red-500">{error}</p>}
+          {loading && (
+            <div className="text-gray-500 italic">Loading products...</div>
+          )}
+          {error && (
+            <div className="bg-red-100 text-red-600 px-4 py-2 rounded mb-4">
+              {error}
+            </div>
+          )}
 
-          {!loading && products.length === 0 && (
-            <p className="text-gray-500">No products found</p>
+          {!loading && products.length === 0 && !error && (
+            <div className="bg-white shadow rounded-lg p-6 text-center">
+              <p className="text-gray-500 mb-4">No products found.</p>
+              <Link
+                to="/addproduct"
+                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:opacity-90 transition"
+              >
+                Add Your First Product
+              </Link>
+            </div>
           )}
 
           {!loading && products.length > 0 && (
             <div className="overflow-x-auto bg-white shadow rounded-lg">
               <table className="min-w-full table-auto">
-                <thead className="bg-gray-50 border-b">
+                <thead className="bg-gray-50 border-b sticky top-0">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       ID
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Image
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Name
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Category
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Price
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Stock
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Actions
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map((product) => (
-                    <tr key={product.id} className="border-b hover:bg-gray-50">
-                      <td className="px-6 py-4 text-sm text-gray-700">{product.id}</td>
+                  {products.map((product, idx) => (
+                    <tr
+                      key={product.id}
+                      className={`border-b ${
+                        idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                      } hover:bg-gray-100`}
+                    >
+                      <td className="px-6 py-4 text-sm text-gray-700">
+                        {product.id}
+                      </td>
 
-                      {/* Product Image */}
                       <td className="px-6 py-4">
                         {product.image ? (
                           <img
-                            src={`http://localhost:8000${product.image}`}
+                            src={
+                              product.image.startsWith("http")
+                                ? product.image
+                                : `http://localhost:8000${product.image}`
+                            }
                             alt={product.name}
                             className="w-16 h-16 object-cover rounded"
                           />
-
                         ) : (
                           <span className="text-gray-400 italic">No image</span>
                         )}
@@ -125,23 +150,21 @@ export default function AllProducts() {
                       <td className="px-6 py-4 text-sm text-gray-700">
                         {product.stock}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-700">
+                      <td className="px-6 py-4 text-sm">
                         <div className="flex items-center gap-3">
+                          <Link to={`/editproduct/${product.id}/`}>
+                            <button className="text-blue-500 hover:text-blue-700">
+                              <Edit size={18} />
+                            </button>
+                          </Link>
                           <button
-                            className="text-blue-500 hover:text-blue-700 flex items-center justify-center"
-                            onClick={() => alert(`Edit ${product.id}`)}
-                          >
-                            <Edit size={18} />
-                          </button>
-                          <button
-                            className="text-red-500 hover:text-red-700 flex items-center justify-center"
+                            className="text-red-500 hover:text-red-700"
                             onClick={() => handleDelete(product.id)}
                           >
                             <Trash2 size={18} />
                           </button>
                         </div>
                       </td>
-
                     </tr>
                   ))}
                 </tbody>

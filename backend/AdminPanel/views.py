@@ -79,6 +79,7 @@ class ProductDetails(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
     def get(self,request,pk):
+        print(request.data)
         product = Product.objects.get(pk=pk)
         serializer = ProductSerializer(product)
         return Response(serializer.data,status=status.HTTP_200_OK)
