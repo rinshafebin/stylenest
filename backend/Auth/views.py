@@ -80,6 +80,7 @@ class PasswordResetRequest(APIView):
 
 class OTPVerificationView(APIView):
     def post(self, request):
+        print(request.data)
         serializer = OTPVerificationSerializer(data=request.data)
         if serializer.is_valid():
             return Response({"message": "OTP verified successfully"}, status=status.HTTP_200_OK)

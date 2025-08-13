@@ -26,6 +26,7 @@ import Customers from './Pages/AdminPanel/Customers'
 import AllOrders from './Pages/AdminPanel/AllOrders'
 import AllProducts from './Pages/AdminPanel/AllProducts'
 import EditProduct from './Pages/AdminPanel/EditProduct'
+import ResetPassword from './Pages/Auth/ResetPassword'
 
 export default function AppWrapper() {
   return (
@@ -48,21 +49,26 @@ const App = () => {
 
         <div className="flex-grow">
           <Routes>
-            <Route path='/' element={<Homepage />} />
-            <Route path='/login' element={<Login />} />
             <Route path='/register' element={< Register />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/' element={<Homepage />} />
+
             <Route path='/products' element={<Allproducts />} />
             <Route path='/products/:category' element={<ProductbyCategory />} />
-            <Route path='/changepassword' element={< ChangePassword />} />
+            <Route path='/productdetails/:id' element={<ProductDetails />} />
+
             <Route path='/cart' element={<Cart />} />
             <Route path='/wishlist' element={<Wishlist />} />
-            <Route path='/logout' element={<Logout />} />
-            <Route path='/forgetpassword' element={< ForgetPassword />} />
-            <Route path='/verifyotp' element={<Verifyotp />} />
             <Route path='/profile' element={<Profile />} />
             <Route path='/orders' element={<Orders />} />
-            <Route path='/productdetails/:id' element={<ProductDetails />} />
             <Route path='/checkout' element={<Checkout />} />
+
+            <Route path='/changepassword' element={< ChangePassword />} />
+            <Route path='/forgetpassword' element={< ForgetPassword />} />
+            <Route path='/verifyotp' element={<Verifyotp />} />
+            <Route path='/resetpassword' element={<ResetPassword />} />
+            <Route path='/logout' element={<Logout />} />
+
             {/* <Route path='/ordersummary' element={<OrderSummary />} /> */}
 
 

@@ -6,16 +6,25 @@ import { useNavigate } from 'react-router-dom';
 const ForgetPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage('');
+
     try {
-      const res = await axiosInstance.post('auth/send-otp/', { email });
+      const res = await axiosInstance.post('auth/forgot-password/', { email });
       setMessage(res.data.message);
-      setTimeout(() => navigate('/verify-otp'), 1500);
+
+      localStorage.setItem('resetEmail', email);
+
+      setTimeout(() => navigate('/verifyotp'), 1500);
     } catch (error) {
       setMessage(error.response?.data?.error || 'Something went wrong');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,13 +52,20 @@ const ForgetPassword = () => {
               Make sure this is the email linked to your account.
             </p>
           </div>
+
+          {/* Updated button theme */}
           <button
             type="submit"
-            onClick={() => navigate("/verifyotp")}
-            className="w-full flex justify-center items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white py-2 rounded-lg transition duration-200"
+            disabled={loading}
+            className="w-full flex justify-center items-center gap-2 
+                       bg-gradient-to-r from-pink-500 to-pink-600 
+                       text-white py-2 rounded-md 
+                       hover:from-pink-600 hover:to-pink-700 
+                       transition duration-300 disabled:opacity-50"
           >
-            Send OTP <ArrowRight size={18} />
+            {loading ? 'Sending...' : 'Send OTP'} <ArrowRight size={18} />
           </button>
+
           {message && (
             <p className="text-sm text-center text-rose-500 mt-2">{message}</p>
           )}

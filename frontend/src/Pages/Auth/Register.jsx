@@ -43,7 +43,6 @@ export default function RegisterPage() {
 
       if (response.status === 201) {
         toast.success('Account created successfully!');
-        console.log("account created succesfully")
 
         setFormData({ username: '', email: '', password: '', confirmPassword: '' });
         setError('');
@@ -156,8 +155,6 @@ export default function RegisterPage() {
             Log in here
           </button>
         </p>
-
-        <ToastContainer position="top-center" autoClose={3000} />
       </form>
     </div>
   );
