@@ -1,5 +1,6 @@
 import React from "react";
 import { Menu, Bell, Search, User } from "lucide-react";
+import { Link } from 'react-router-dom'
 
 const Header = ({ sidebarOpen, setSidebarOpen }) => {
   return (
@@ -22,7 +23,9 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
           <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full"></span>
         </button>
         <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-lg flex items-center justify-center">
-          <User className="w-5 h-5 text-white" />
+          <Link to={'/profile'}>
+            <User className="w-5 h-5 text-white" />
+          </Link>
         </div>
       </div>
     </header>

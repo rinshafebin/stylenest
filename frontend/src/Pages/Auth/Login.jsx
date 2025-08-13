@@ -28,7 +28,12 @@ export const Login = () => {
       login(access, refresh, user);
 
       toast.success("Login successfully")
-      navigate("/");
+      if (user.is_superuser) {
+        navigate("/adminpanel");
+      } else {
+        navigate("/");
+      }
+
     } catch (error) {
       console.error(error);
       setError("Invalid credentials. Please try again.");
@@ -97,7 +102,7 @@ export const Login = () => {
               <div></div>
               <button
                 type="button"
-                onClick={()=>navigate('/forgetpassword')}
+                onClick={() => navigate('/forgetpassword')}
                 className="text-sm text-rose-600 hover:text-rose-500 font-medium transition-colors"
               >
                 Forgot password?
@@ -107,9 +112,8 @@ export const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 px-6 rounded-xl font-semibold focus:ring-2 focus:ring-rose-400 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl group ${
-                loading ? 'opacity-50 cursor-not-allowed' : 'hover:from-rose-600 hover:to-pink-600'
-              }`}
+              className={`w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 px-6 rounded-xl font-semibold focus:ring-2 focus:ring-rose-400 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl group ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:from-rose-600 hover:to-pink-600'
+                }`}
             >
               <div className="flex items-center justify-center space-x-2">
                 <span>{loading ? 'Signing in...' : 'Sign In'}</span>

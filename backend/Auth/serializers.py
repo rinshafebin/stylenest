@@ -9,7 +9,7 @@ from Auth.models import CustomUser
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email']
+        fields = ['id', 'username', 'email','is_superuser']
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
