@@ -1,189 +1,98 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from Auth.models import CustomUser
 from Auth.serializers import (
     UserRegistrationSerializer,
     LoginSerializer,
     ChangePasswordSerializer,
     UserSerializer,
-    ForgotPasswordSerializer,
-    VerifyOTPSerializer,
-    ResetPasswordSerializer
+    PasswordResetRequestSerializer,
+    OTPVerificationSerializer,
+    PasswordResetSerializer
 )
 
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.response import Response
-from rest_framework import status
-from Auth.models import CustomUser,PasswordResetOTP
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_bytes,force_str
-from django.urls import reverse
-from django.conf import settings
-from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404 
-from django.contrib.auth.hashers import make_password
-import random,string,uuid
 
-
-
-
-# Create your views here.
-# --------------------------  registration  -------------------------------------------
+# ----------------user registration ---------------------
 
 class UserRegistration(APIView):
-    def post(self,request):
+    def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
-            # validated_data =serializer.validated_data
-            # validated_data.pop('password2')
-            
-            # user = CustomUser.objects.create(
-            #     username =validated_data['username'],
-            #     email = validated_data['email'],
-            #     password = make_password(validated_data['password']),
-            #     is_active = False
-            # )
-            
             serializer.save()
-            
-            # current_site = get_current_site(request)
-            # uid = urlsafe_base64_encode(force_bytes(user.pk)) 
-            # token = default_token_generator.make_token(user)
-            # verification_link = f"http://{current_site.domain}{reverse('emailverify', kwargs={'uidb64':uid,'token':token})}"
-            
-            # subject = 'Activate Your Account'
-            # message = f'hi{user.username},\nPlease click the link below to verify your email and activate your account : \n{verification_link}'
-            # from_email = settings.DEFAULT_FROM_EMAIL
-            # recipient_list = [user.email]
-            # send_mail(subject,message,from_email,recipient_list,fail_silently = False)
-            # # //celery server
-                                                                  
-            return Response({'message':'user created succesfully ,please check your mail to verify your account'},status=status.HTTP_201_CREATED)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'message': 'User created successfully, please check your email to verify your account'},
+                status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-    
-# -------------------------- Login  -------------------------------------------
+# ------------------------- login ---------------------
 
 
 class Login(APIView):
-    def post(self,request):
-        serilaizer = LoginSerializer(data=request.data)
-        if serilaizer.is_valid():
-            user = serilaizer.validated_data['user']
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
             refresh = RefreshToken.for_user(user)
             user_data = UserSerializer(user).data
-                        
             return Response({
-              'message':'login was succesfull',
-              'refresh':str(refresh) ,
-              'access': str(refresh.access_token),
-              'user':user_data
-            },status=status.HTTP_200_OK)
-
-        return Response(serilaizer.errors,status=status.HTTP_400_BAD_REQUEST)
-
+                'message': 'Login successful',
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'user': user_data
+            }, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-# -------------------------- Change password -------------------------------------------
+# ------------------------- change password ---------------------
 
 class ChangePassword(APIView):
     permission_classes = [IsAuthenticated]
-    
-    def post(self,request):
-        user = request.user
-        serializer = ChangePasswordSerializer(data =request.data)
-        
+
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data)
         if serializer.is_valid():
             old_password = serializer.validated_data['old_password']
             new_password = serializer.validated_data['new_password']
-            
-            if not user.check_password(old_password):
-                return Response({'error':'old password is incorrect'},status=status.HTTP_400_BAD_REQUEST)
-             
-            user.set_password(new_password)
-            user.save()
-            
-            return Response({'message':'Password Changed succesfully '},status=status.HTTP_200_OK)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-            
 
+            if not request.user.check_password(old_password):
+                return Response({'error': 'Old password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
 
-# ------------------------password resetting by otp---------------------------------
-
-def generate_otp():
-    return ''.join(random.choices(string.digits, k=6))
-
-class ForgotPasswordAPIView(APIView):
-    def post(self, request):
-        serializer = ForgotPasswordSerializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            try:
-                user = CustomUser.objects.get(email=email)
-            except CustomUser.DoesNotExist:
-                return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
-            otp = generate_otp()
-            token = str(uuid.uuid4())
-            PasswordResetOTP.objects.create(user=user, otp=otp, token=token)
-
-            send_mail(
-                "Password Reset OTP",
-                f"Your OTP is {otp}. It expires in 5 minutes.",
-                "noreply@example.com",
-                [email]
-            )
-
-            return Response({"message": "OTP sent to email", "token": token})
+            request.user.set_password(new_password)
+            request.user.save()
+            return Response({'message': 'Password changed successfully'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class VerifyOTPAPIView(APIView):
+# ------------------------- password reset  ---------------------
+
+class PasswordResetRequest(APIView):
     def post(self, request):
-        serializer = VerifyOTPSerializer(data=request.data)
+        serializer = PasswordResetRequestSerializer(data=request.data)
         if serializer.is_valid():
-            token = serializer.validated_data['token']
-            otp = serializer.validated_data['otp']
-            try:
-                record = PasswordResetOTP.objects.get(token=token, otp=otp)
-            except PasswordResetOTP.DoesNotExist:
-                return Response({"error": "Invalid OTP or token"}, status=status.HTTP_400_BAD_REQUEST)
-
-            if record.is_expired():
-                return Response({"error": "OTP expired"}, status=status.HTTP_400_BAD_REQUEST)
-
-            return Response({"message": "OTP verified successfully"})
+            return Response({"message": "OTP sent successfully"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ResetPasswordAPIView(APIView):
+class OTPVerificationView(APIView):
     def post(self, request):
-        serializer = ResetPasswordSerializer(data=request.data)
+        serializer = OTPVerificationSerializer(data=request.data)
         if serializer.is_valid():
-            token = serializer.validated_data['token']
-            new_password = serializer.validated_data['new_password']
-            try:
-                record = PasswordResetOTP.objects.get(token=token)
-            except PasswordResetOTP.DoesNotExist:
-                return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
-
-            if record.is_expired():
-                return Response({"error": "Token expired"}, status=status.HTTP_400_BAD_REQUEST)
-
-            user = record.user
-            user.set_password(new_password)
-            user.save()
-            record.delete()
-
-            return Response({"message": "Password reset successful"})
+            return Response({"message": "OTP verified successfully"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class PasswordResetView(APIView):
+    def post(self, request):
+        serializer = PasswordResetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': "Password reset successful"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # --------------------------------- reset password -------------------------------------
 

@@ -1,99 +1,134 @@
-from rest_framework import serializers 
-from django.contrib.auth.hashers import make_password
+from rest_framework import serializers
 from django.contrib.auth import authenticate
-from Auth.models import CustomUser
 from django.contrib.auth.password_validation import validate_password
-
-
-# ------------------------user registration serializer ---------------------------
+from django.core.mail import send_mail, BadHeaderError
+from django.utils import timezone
+from Auth.models import CustomUser
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id','username','email']
+        fields = ['id', 'username', 'email']
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['username','email','password']  
+        fields = ['username', 'email', 'password']
         extra_kwargs = {
             'password': {'write_only': True},
         }
-        
-    def validate_password(self,value):
+
+    def validate_password(self, value):
         validate_password(value)
         return value
 
     def create(self, validated_data):
-        return CustomUser.objects.create_user(**validated_data) 
-         
-
-# ---------------------------- login serializer ---------------------------
+        return CustomUser.objects.create_user(**validated_data)
 
 
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
 
-class LoginSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField() 
-    password = serializers.CharField(write_only = True)
-    
-    class Meta:
-        model = CustomUser
-        fields = ['email','password']
-    
-    def validate(self,data):
-        user =authenticate(email=data['email'],password =data['password'])
-        if user :
-            return {'user':user}
-        raise serializers.ValidationError('invalid email or password')
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
 
-        
-    
-                
-    # def validate(self,data):
-    #     email = data.get('email')
-    #     password=data.get('password')       
-    #     if email and password:
-    #         user =authenticate(username=email,password=password)
-    #         if not user :
-    #             raise serializers.ValidationError('invalid email or password')
-    #     else:
-    #         raise serializers.ValidationError('Both email and password are required')    
-    #     data['user'] = user
-    #     return data
-        
+        if not email or not password:
+            raise serializers.ValidationError("Both email and password are required.")
 
- 
- 
-# ------------------------change password serializer ---------------------------
-   
+        user = authenticate(email=email, password=password)
+        if user is None:
+            raise serializers.ValidationError("Invalid email or password.")
+
+        data['user'] = user
+        return data
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(required = True)
-    new_password = serializers.CharField(required = True)
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    def validate_new_password(self, value):
+        validate_password(value)
+        return value
 
 
-    
-
-# ---------------------- Reset password serializer ---------------------------
-
-class ForgotPasswordSerializer(serializers.Serializer):
+class PasswordResetRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
-class VerifyOTPSerializer(serializers.Serializer):
-    token = serializers.CharField()
-    otp = serializers.CharField()
+    def validate_email(self, value):
+        try:
+            user = CustomUser.objects.get(email=value)
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError("User with this email does not exist.")
 
-class ResetPasswordSerializer(serializers.Serializer):
-    token = serializers.CharField()
-    new_password = serializers.CharField()
+        user.otp_generate()
+
+        try:
+            send_mail(
+                subject="Password Reset OTP",
+                message=f"Your OTP for password reset is: {user.otp}",
+                from_email="noreply@yourapp.com",
+                recipient_list=[user.email],
+                fail_silently=False,
+            )
+        except BadHeaderError:
+            raise serializers.ValidationError("Invalid header found.")
+        except Exception:
+            raise serializers.ValidationError("Failed to send email. Please try again later.")
+
+        return value
 
 
+class OTPVerificationSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.IntegerField()
+
+    def validate(self, data):
+        try:
+            user = CustomUser.objects.get(email=data["email"])
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError({"email": "User not found."})
+
+        if user.otp != data["otp"]:
+            raise serializers.ValidationError({"otp": "Invalid OTP."})
+
+        if timezone.now() >= user.otp_expiration:
+            raise serializers.ValidationError({"otp": "OTP has expired."})
+
+        user.otp_verified = True
+        user.save()
+        return data
 
 
-    
-    
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+    confirm_password = serializers.CharField()
 
-# -----------------------------------------------    -------------------------------   
+    def validate(self, data):
+        if data['password'] != data['confirm_password']:
+            raise serializers.ValidationError("Passwords do not match.")
+
+        try:
+            user = CustomUser.objects.get(email=data['email'])
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError({"email": "Email not found."})
+
+        if not user.otp_verified:
+            raise serializers.ValidationError({"otp": "OTP verification required."})
+
+        validate_password(data['password'])
+        return data
+
+    def save(self):
+        user = CustomUser.objects.get(email=self.validated_data['email'])
+        user.set_password(self.validated_data['password'])
+        user.otp_verified = False
+        user.otp = None
+        user.otp_expiration = None
+        user.save()
+        return user

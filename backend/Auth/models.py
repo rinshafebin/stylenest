@@ -1,29 +1,27 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from datetime import timedelta
 from django.utils import timezone
+from datetime import timedelta
+import random
 
-
-# Create your models here.
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)  
-    address = models.TextField(blank=True, null=True)  
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
 
-    
+    otp = models.IntegerField(blank=True, null=True)
+    otp_expiration = models.DateTimeField(blank=True, null=True)
+    otp_verified = models.BooleanField(default=False)
+
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS=['first_name','last_name','username',]
-    
+    REQUIRED_FIELDS = ['username']
+
     def __str__(self):
         return self.email
-    
 
-class PasswordResetOTP(models.Model):
-    user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-    otp = models.CharField(max_length=6)
-    token = models.CharField(max_length=64, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    def is_expired(self):
-        return timezone.now()>self.created_at + timedelta(minutes=10)
+    def otp_generate(self):
+        self.otp = random.randint(100000, 999999)
+        self.otp_expiration = timezone.now() + timedelta(minutes=5)
+        self.otp_verified = False
+        self.save()
