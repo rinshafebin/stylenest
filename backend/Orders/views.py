@@ -1,60 +1,56 @@
-# from django.shortcuts import render
-# from rest_framework.views import APIView
-# from rest_framework.permissions import IsAuthenticated
-# from Orders.serializers import ShippingAddressSerializer,OrderSerializer
-# from rest_framework.response import Response
-# from rest_framework import status
-# from Products.models import Product
-# # Create your views here.
+# orders/views.py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from .models import Order, OrderItem
+from user.models import UserAddress
+from Products.models import Product
+from django.db import transaction
 
+class CreateOrderAPIView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def post(self, request):
+        cart_items = request.data.get("cart_items", [])
+        if not cart_items:
+            return Response({"error": "Cart is empty"}, status=status.HTTP_400_BAD_REQUEST)
 
-# # ---------------- shipping address creating view --------------------------
+        try:
+            address = UserAddress.objects.get(user=request.user)
+        except UserAddress.DoesNotExist:
+            return Response({"error": "No shipping address found"}, status=status.HTTP_400_BAD_REQUEST)
 
-# class ShippingAddressView(APIView):
-#     permission_classes = [IsAuthenticated]
-    
-#     def post(self,request):
-#         serializer = ShippingAddressSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save(user=request.user)
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+        total = sum(item["price"] * item["quantity"] for item in cart_items)
 
-# # ------------------- order creating view ----------------------------------
+        with transaction.atomic():
+            order = Order.objects.create(user=request.user, address=address, total=total, status="Pending")
 
-# class CreateOrderView(APIView):
-#     permission_classes = [IsAuthenticated]
-#     def post(self,request):
-#         data = request.data.copy()
-#         data['user'] = request.user.id
-        
-#         total = 0
-#         for item in data.get('items',[]):
-#             product_id = item['product']
-#             quantity =item['quantity'] 
-#             try :
-#                 product = Product.objects.get(id=product_id)
-#                 if product.stock < quantity:
-#                     return Response({'error': f'Not enough stock for {product.name}'}, status=status.HTTP_400_BAD_REQUEST)
-#                 total += product.price*quantity
-#                 item['price'] = str(product.price)
-#             except Product.DoesNotExist:
-#                 return Response({'error': 'Invalid product'}, status=status.HTTP_400_BAD_REQUEST)
-            
-#         data['total_price'] =total
-#         serializer =OrderSerializer(data = data)
-#         if serializer.is_valid():
-#             order = serializer.save()
-            
-#             for item in order.items.all():
-#                 product = item.product
-#                 product.stock -= item.quantity
-#                 product.save()
-#             return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-       
-        
-# # --------------------------------------------------------------------------------------------
+            for item in cart_items:
+                try:
+                    product = Product.objects.get(id=item["product_id"])
+                except Product.DoesNotExist:
+                    return Response({"error": f"Product {item['product_id']} not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+                OrderItem.objects.create(
+                    order=order,
+                    product=product,
+                    quantity=item["quantity"],
+                    price=item["price"]
+                )
+
+        return Response(
+            {
+                "order_id": order.id,
+                "total": total,
+                "items": cart_items,
+                "address": {
+                    "name": address.nameofuser,
+                    "phone": address.phonenumber,
+                    "pincode": address.pincode,
+                    "state": address.state,
+                    "address_line": address.address,
+                }
+            },
+            status=status.HTTP_201_CREATED
+        )
