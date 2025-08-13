@@ -22,6 +22,7 @@ class CustomUser(AbstractUser):
 class PasswordResetOTP(models.Model):
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
     otp = models.CharField(max_length=6)
+    token = models.CharField(max_length=64, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def is_expired(self):

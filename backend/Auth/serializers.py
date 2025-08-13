@@ -78,20 +78,21 @@ class ChangePasswordSerializer(serializers.Serializer):
     
 
 # ---------------------- Reset password serializer ---------------------------
-   
 
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class VerifyOTPSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    otp = serializers.CharField()
 
 class ResetPasswordSerializer(serializers.Serializer):
-    email = serializers.EmailField(required = True)
-    
-    def validate_email(self,value):
-        if not CustomUser.objects.filter(email=value).exists():
-            raise serializers.ValidationError('email not found')
-        return value
-   
-
-class SetNewPassword(serializers.Serializer):
+    token = serializers.CharField()
     new_password = serializers.CharField()
+
+
+
+
     
     
 
