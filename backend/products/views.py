@@ -24,8 +24,7 @@ class Search_products(APIView):
             products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
+ 
 # ---------------------- all products  api ---------------------------
 
 class Products(APIView):

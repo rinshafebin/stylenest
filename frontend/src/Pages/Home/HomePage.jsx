@@ -117,35 +117,6 @@ export default function Homepage() {
         </div>
       </section>
 
-      {/* New Arrivals Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-black mb-4">
-              New{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-500">
-                Arrivals
-              </span>
-            </h2>
-            <p className="text-gray-600">Discover our most popular items</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[hero1, hero2, hero3, hero1].map((img, idx) => (
-              <div key={idx} className="bg-white rounded-2xl shadow-md hover:shadow-lg transition overflow-hidden">
-                <img src={img} alt="New Arrival" className="w-full h-56 object-cover" />
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-black">Product Name</h3>
-                  <p className="text-rose-500 font-bold mt-2">$49.99</p>
-                  <button className="mt-4 bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded-lg w-full hover:opacity-90">
-                    View Product
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Why Choose Us */}
       <section className="py-16 bg-gray-100">

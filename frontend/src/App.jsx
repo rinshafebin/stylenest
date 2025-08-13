@@ -27,6 +27,7 @@ import AllOrders from './Pages/AdminPanel/AllOrders'
 import AllProducts from './Pages/AdminPanel/AllProducts'
 import EditProduct from './Pages/AdminPanel/EditProduct'
 import ResetPassword from './Pages/Auth/ResetPassword'
+import SearchResults from './Pages/User/SearchResults'
 
 export default function AppWrapper() {
   return (
@@ -60,6 +61,7 @@ const App = () => {
             <Route path='/cart' element={<Cart />} />
             <Route path='/wishlist' element={<Wishlist />} />
             <Route path='/profile' element={<Profile />} />
+            <Route path="/search" element={<SearchResults />} />
             <Route path='/orders' element={<Orders />} />
             <Route path='/checkout' element={<Checkout />} />
 

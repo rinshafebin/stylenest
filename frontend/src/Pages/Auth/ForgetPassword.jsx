@@ -22,7 +22,7 @@ const ForgetPassword = () => {
 
       setTimeout(() => navigate('/verifyotp'), 1500);
     } catch (error) {
-      setMessage(error.response?.data?.error || 'Something went wrong');
+      setMessage(error.response?.data?.error || 'email is not exist');
     } finally {
       setLoading(false);
     }

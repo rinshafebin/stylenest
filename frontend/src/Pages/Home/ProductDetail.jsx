@@ -36,9 +36,9 @@ export default function ProductDetails() {
     }
   };
 
-  const handleAddToWishlist = async () => {
+  const handleAddToWishlist = async () => {    
     try {
-      await axiosInstance.post("/wishlist/items/", { product_id: product.id });
+      await axiosInstance.post("/wishlist/create/", { product_id: product.id });
       toast.success("Product added to wishlist!");
     } catch (error) {
       toast.error("You need to be logged in to use wishlist.");
