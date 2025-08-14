@@ -5,21 +5,28 @@ import axiosInstance from "../../api/axios";
 export default function OrderSummary() {
   const [cartItems, setCartItems] = useState([]);
   const [shippingInfo, setShippingInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const shippingCost = 150;
   const tax = 100;
-
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const cartRes = await axiosInstance.get("/cart/list/");
-        setCartItems(cartRes.data.items);
+        setCartItems(cartRes.data.items || []);
 
-        const shippingRes = await axiosInstance.get("/orders/shippingaddress/");
+        const shippingRes = await axiosInstance.get("/orders/shipping-address/"); // check backend URL
         setShippingInfo(shippingRes.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        if (error.response && error.response.status === 404) {
+          setErrorMsg("No shipping address found. Please add one before placing an order.");
+        } else {
+          setErrorMsg("Error fetching data. Please try again.");
+        }
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -32,6 +39,10 @@ export default function OrderSummary() {
   const total = subtotal + shippingCost + tax;
 
   const handleProceedToPayment = async () => {
+    if (!shippingInfo) {
+      alert("Please add a shipping address before proceeding.");
+      return;
+    }
     try {
       const orderData = {
         shipping_address: shippingInfo.id,
@@ -42,14 +53,28 @@ export default function OrderSummary() {
       };
       const res = await axiosInstance.post("/orders/create-order/", orderData);
       console.log("Order created:", res.data);
-     
+      // You can redirect to payment page here
     } catch (error) {
       console.error("Error creating order:", error);
     }
   };
 
-  if (!shippingInfo) {
+  if (loading) {
     return <p className="text-center mt-6">Loading...</p>;
+  }
+
+  if (errorMsg) {
+    return (
+      <div className="text-center mt-6">
+        <p className="text-red-500">{errorMsg}</p>
+        <button
+          onClick={() => window.history.back()}
+          className="mt-4 px-4 py-2 border border-rose-400 rounded-lg text-rose-500 hover:bg-rose-50 transition"
+        >
+          <ArrowLeft className="inline w-4 h-4 mr-2" /> Go Back
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -73,7 +98,7 @@ export default function OrderSummary() {
                 </div>
               </div>
               <p className="font-semibold bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
-                ₹{(item.product.price * item.quantity)}
+                ₹{item.product.price * item.quantity}
               </p>
             </div>
           ))}
@@ -106,8 +131,8 @@ export default function OrderSummary() {
           <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
             <MapPin className="w-5 h-5 text-rose-500" /> Shipping Address
           </h3>
-          <p className="text-gray-600 mt-1">{shippingInfo.full_name}</p>
-          <p className="text-gray-600">{shippingInfo.house_name}, {shippingInfo.building}</p>
+          <p className="text-gray-600 mt-1">{shippingInfo.name}</p>
+          <p className="text-gray-600">{shippingInfo.address}</p>
           <p className="text-gray-600">
             {shippingInfo.city}, {shippingInfo.state} - {shippingInfo.pincode}
           </p>

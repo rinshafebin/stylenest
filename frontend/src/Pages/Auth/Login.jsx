@@ -34,9 +34,20 @@ export const Login = () => {
         navigate("/");
       }
 
-    } catch (error) {
-      console.error(error);
-      setError("Invalid credentials. Please try again.");
+    } catch (err) {
+      console.error(err);
+      if (err.response?.data) {
+        const data = err.response.data;
+        if (typeof data.detail === "string") {
+          setError(data.detail);
+        }
+        else {
+          const firstKey = Object.keys(data)[0];
+          setError(Array.isArray(data[firstKey]) ? data[firstKey][0] : data[firstKey]);
+        }
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -69,7 +80,6 @@ export const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white focus:bg-white"
-                  required
                 />
               </div>
             </div>
@@ -86,7 +96,6 @@ export const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white focus:bg-white"
-                  required
                 />
                 <button
                   type="button"

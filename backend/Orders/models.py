@@ -1,8 +1,21 @@
-# orders/models.py
 from django.db import models
 from django.conf import settings
 from Products.models import Product
-from user.models import UserAddress
+
+class ShippingAddress(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="shipping_address")
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15)
+    address = models.TextField(max_length=255)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=20)
+    country = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.name} - {self.city}, {self.country}"
+
+
 
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -11,7 +24,7 @@ class Order(models.Model):
         ("Failed", "Failed"),
     ]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    address = models.ForeignKey(UserAddress, on_delete=models.PROTECT)
+    address = models.ForeignKey(ShippingAddress, on_delete=models.PROTECT)
     total = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Pending")
     created_at = models.DateTimeField(auto_now_add=True)

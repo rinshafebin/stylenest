@@ -49,11 +49,12 @@ export default function RegisterPage() {
         navigate('/login');
       }
     } catch (err) {
-      console.error(err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
+      if (err.response?.data) {
+        const data = err.response.data;
+        const firstKey = Object.keys(data)[0];
+        setError(Array.isArray(data[firstKey]) ? data[firstKey][0] : data[firstKey]);
       } else {
-        setError('Registration failed. Please try again.');
+        setError('Registration failed.');
       }
     }
   };
@@ -72,7 +73,6 @@ export default function RegisterPage() {
             name="username"
             value={formData.username}
             onChange={handleChange}
-            required
             placeholder="Full Name"
             className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
           />
@@ -86,7 +86,6 @@ export default function RegisterPage() {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            required
             placeholder="Email Address"
             className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
           />
@@ -100,7 +99,6 @@ export default function RegisterPage() {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            required
             placeholder="Password"
             className="w-full pl-10 pr-10 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
           />
@@ -121,7 +119,6 @@ export default function RegisterPage() {
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
-            required
             placeholder="Confirm Password"
             className="w-full pl-10 pr-10 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
           />

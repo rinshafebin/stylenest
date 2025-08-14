@@ -12,14 +12,20 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email','is_superuser']
 
 
+# ---------------user registration serializer ------------------------------
+
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'password']
+        
         extra_kwargs = {
-            'password': {'write_only': True},
+            'username': {'required': True, 'error_messages': {'required': 'Please enter your username'}},
+            'email': {'required': True, 'error_messages': {'required': 'Please enter your email'}},
+            'password': {'write_only': True, 'required': True, 'error_messages': {'required': 'Please enter your password'}},
         }
-
+        
     def validate_password(self, value):
         validate_password(value)
         return value
@@ -27,6 +33,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return CustomUser.objects.create_user(**validated_data)
 
+
+# ---------------Login serializer ------------------------------
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -46,6 +54,8 @@ class LoginSerializer(serializers.Serializer):
         data['user'] = user
         return data
 
+# ---------------changepassword serializer ------------------------------
+
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
@@ -55,6 +65,8 @@ class ChangePasswordSerializer(serializers.Serializer):
         validate_password(value)
         return value
 
+
+# --------------- Reset password serializer ------------------------------
 
 class PasswordResetRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -82,6 +94,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 
         return value
 
+# --------------- otp verification serializer ------------------------------
 
 class OTPVerificationSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -103,6 +116,7 @@ class OTPVerificationSerializer(serializers.Serializer):
         user.save()
         return data
 
+# ---------------password reset serializer ------------------------------
 
 class PasswordResetSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -132,3 +146,5 @@ class PasswordResetSerializer(serializers.Serializer):
         user.otp_expiration = None
         user.save()
         return user
+
+# ----------------------------------- ------------------------------

@@ -70,8 +70,7 @@ const App = () => {
             <Route path='/verifyotp' element={<Verifyotp />} />
             <Route path='/resetpassword' element={<ResetPassword />} />
             <Route path='/logout' element={<Logout />} />
-
-            {/* <Route path='/ordersummary' element={<OrderSummary />} /> */}
+            <Route path='/ordersummary' element={<OrderSummary />} />
 
 
 
