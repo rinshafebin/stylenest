@@ -32,7 +32,6 @@ const Profile = () => {
     try {
       const res = await axiosInstance.patch('user/profile/', formData);
       setUser(res.data.data);
-      console.log(Request.data)
       localStorage.setItem('user', JSON.stringify(res.data.data));
       setIsEditing(false);
     } catch (error) {

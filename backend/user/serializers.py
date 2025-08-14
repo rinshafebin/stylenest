@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from Auth.models import CustomUser
-from user.models import UserAddress
+from user.models import ShippingAddress
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,13 +9,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ['email'] 
 
 
-class UserAddressSerializer(serializers.ModelSerializer):
+class ShippingAddressSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserAddress
+        model = ShippingAddress
         fields = "__all__"
         read_only_fields = ["user"]
-
-    def create(self, validated_data):
-        user = self.context['request'].user
-        validated_data["user"] = user
-        return super().create(validated_data)

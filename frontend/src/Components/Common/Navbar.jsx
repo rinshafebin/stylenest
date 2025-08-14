@@ -18,7 +18,6 @@ const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
-  // Load user from localStorage
   useEffect(() => {
     const accessToken = localStorage.getItem("access_token");
     const storedUser = localStorage.getItem("user");
@@ -33,7 +32,6 @@ const Navbar = () => {
   const handleLogout = () => navigate("/logout");
   const handleLogin = () => navigate("/login");
 
-  // Fetch search suggestions
   useEffect(() => {
     const fetchResults = async () => {
       if (searchTerm.trim() === "") {
@@ -46,7 +44,6 @@ const Navbar = () => {
         );
         console.log("Search API response:", response.data);
 
-        // Handle both array and paginated API formats
         if (Array.isArray(response.data)) {
           setSearchResults(response.data);
         } else {
