@@ -18,8 +18,6 @@ import Profile from './Pages/User/Profile'
 import Orders from './Pages/User/Orders'
 import ProductDetails from './Pages/Home/ProductDetail'
 import Checkout from './Pages/User/Checkout'
-import OrderSummary from './Pages/User/Ordersummary'
-import AdminHome from './Pages/AdminPanel/AdminDashboard'
 import AddProduct from './Pages/AdminPanel/Addproduct'
 import AdminDashboard from './Pages/AdminPanel/AdminDashboard'
 import Customers from './Pages/AdminPanel/Customers'
@@ -28,6 +26,7 @@ import AllProducts from './Pages/AdminPanel/AllProducts'
 import EditProduct from './Pages/AdminPanel/EditProduct'
 import ResetPassword from './Pages/Auth/ResetPassword'
 import SearchResults from './Pages/User/SearchResults'
+import ShippingAddressForm from './Pages/User/ShippingAddressForm'
 
 export default function AppWrapper() {
   return (
@@ -64,13 +63,15 @@ const App = () => {
             <Route path="/search" element={<SearchResults />} />
             <Route path='/orders' element={<Orders />} />
             <Route path='/checkout' element={<Checkout />} />
+            <Route path='/shippingaddress' element={< ShippingAddressForm/>} />
+
 
             <Route path='/changepassword' element={< ChangePassword />} />
             <Route path='/forgetpassword' element={< ForgetPassword />} />
             <Route path='/verifyotp' element={<Verifyotp />} />
             <Route path='/resetpassword' element={<ResetPassword />} />
             <Route path='/logout' element={<Logout />} />
-            <Route path='/ordersummary' element={<OrderSummary />} />
+
 
 
 

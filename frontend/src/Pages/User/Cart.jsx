@@ -47,19 +47,7 @@ export default function Cart() {
     }
   };
 
-  const handlePlaceOrder = async (item) => {
-    try {
-      await axiosInstance.post('/orders/create/', {
-        product: item.product.id,
-        quantity: item.quantity,
-      });
-      toast.success(`Order placed for ${item.product.name}`);
-      handleRemove(item.id);
-    } catch (error) {
-      console.error('Error placing order:', error);
-      toast.error('Failed to place order');
-    }
-  };
+  
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.product.price * item.quantity,
@@ -139,7 +127,7 @@ export default function Cart() {
 
 
                       <button
-                        onClick={() => navigate('/checkout')}
+                        onClick={() => navigate('/shippingaddress')}
                         className="mt-6 w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg hover:opacity-90 shadow-md font-medium"
                       >
                         Proceed to Checkout
@@ -178,13 +166,6 @@ export default function Cart() {
                     ₹{totalPrice}
                   </span>
                 </div>
-
-                {/* <button
-                  onClick={() => navigate('/checkout')}
-                  className="mt-6 w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg hover:opacity-90 shadow-md font-medium"
-                >
-                  Proceed to Checkout
-                </button> */}
               </div>
             )}
 
