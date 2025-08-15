@@ -28,6 +28,7 @@ import ResetPassword from './Pages/Auth/ResetPassword'
 import SearchResults from './Pages/User/SearchResults'
 import ShippingAddressForm from './Pages/User/ShippingAddressForm'
 
+
 export default function AppWrapper() {
   return (
     <AuthProvider>
@@ -62,8 +63,8 @@ const App = () => {
             <Route path='/profile' element={<Profile />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path='/orders' element={<Orders />} />
-            <Route path='/checkout' element={<Checkout />} />
             <Route path='/shippingaddress' element={< ShippingAddressForm/>} />
+            <Route path="/checkout" element={<Checkout />} />
 
 
             <Route path='/changepassword' element={< ChangePassword />} />
