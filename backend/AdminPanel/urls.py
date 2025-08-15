@@ -7,7 +7,10 @@ from AdminPanel.views import (
     ProductDetails,
     ProductUpdate,
     ProductDelete,
-    ViewProductsByCategory
+    ViewProductsByCategory,
+    AllOrders,
+    AdminOrderUpdateView
+    
     
 )
 urlpatterns = [
@@ -20,6 +23,8 @@ urlpatterns = [
     path('updateproduct/<int:pk>/',ProductUpdate.as_view(),name='updateproduct'),
     path('deleteproduct/<int:pk>/',ProductDelete.as_view(),name='deleteproduct'),
     path('productbycategory/<str:category>/',ViewProductsByCategory.as_view(),name='productdetailbycategory'),
-    # path('allorders/',AllOrders.as_view(),name='products'),
+    path('allorders/',AllOrders.as_view(),name='products'),
+    path("editorder/<int:pk>/", AdminOrderUpdateView.as_view(), name="admin-order-update"),
+
 
 ]

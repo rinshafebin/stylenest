@@ -10,8 +10,6 @@ urlpatterns = [
     path('shipping/', ShippingAddressView.as_view(), name='shipping'),
     path('summary/', OrderSummaryAPIView.as_view(), name='order-summary'),
     path('my-orders/', MyOrdersView.as_view(), name='my-orders'),
-    path("cancel/<int:order_id>", CancelOrderView.as_view(), name="cancel-order"),
-
 
 
 ]

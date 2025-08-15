@@ -8,8 +8,9 @@ from Products.models import Product
 from Auth.models import CustomUser
 from rest_framework import status
 from rest_framework.pagination import LimitOffsetPagination
-# from orders.models import Order
-# from orders.serializers import OrderSerializer
+from Orders.models import Order
+from AdminPanel.serializers import OrderSerializer
+from rest_framework.generics import UpdateAPIView
 
 
 # Create your views here.
@@ -142,10 +143,16 @@ class ViewProductsByCategory(APIView):
 
 # ----------------------------    all orders  --------------------------
 
-# class AllOrders(APIView):
-#     permission_classes = [IsAdminUser]
+class AllOrders(APIView):
+    permission_classes = [IsAdminUser]
 
-#     def get(self, request):
-#         orders = Order.objects.all().order_by('-created_at')
-#         serializer = OrderSerializer(orders, many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
+    def get(self, request):
+        orders = Order.objects.all().order_by('-created_at')
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class AdminOrderUpdateView(UpdateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [IsAdminUser]
+
