@@ -1,9 +1,10 @@
 from rest_framework import serializers
-from Orders.models import ShippingAddress, OrderItem
+from Orders.models import ShippingAddress,Order, OrderItem
 from Products.models import Product
 
 
 # ------------------ Order Item Serializer -------------------------------------
+
 class OrderItemSerializer(serializers.ModelSerializer):
     product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
 
@@ -11,6 +12,16 @@ class OrderItemSerializer(serializers.ModelSerializer):
         model = OrderItem
         fields = ["product", "quantity"]
 
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Order
+        fields = [
+            'id', 'created_at', 'total', 'payment_method',
+            'payment_status', 'status', 'items'
+        ]
 
 # ------------------ Shipping Address Serializer -------------------------------------
 class ShippingAddressSerializer(serializers.ModelSerializer):

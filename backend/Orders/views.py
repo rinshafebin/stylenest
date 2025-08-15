@@ -1,16 +1,13 @@
 import hmac, hashlib
 from decimal import Decimal
 import logging
-
-from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-
-from Orders.serializers import ShippingAddressSerializer
+from Orders.serializers import ShippingAddressSerializer,OrderSerializer
 from Orders.models import ShippingAddress, Order
-from Cart.models import Cart  # uses your existing Cart model
+from Cart.models import Cart 
 from Products.serializers import ProductSerializer
 logger = logging.getLogger(__name__)
 
@@ -95,3 +92,27 @@ class ShippingAddressView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(self.format_errors(serializer.errors), status=status.HTTP_400_BAD_REQUEST)
 
+
+
+class MyOrdersView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        orders = Order.objects.filter(user=request.user).order_by('-created_at')
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data)
+    
+class CancelOrderView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, order_id):
+        try:
+            order = Order.objects.get(id=order_id, user=request.user)
+            if order.status in ['Processing', 'Pending']:
+                order.status = 'Cancelled'
+                order.save()
+                return Response({"detail": "Order cancelled"})
+            return Response({"detail": "Order cannot be cancelled"}, status=400)
+        except Order.DoesNotExist:
+            return Response({"detail": "Not found"}, status=404)
+    

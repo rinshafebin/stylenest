@@ -26,7 +26,8 @@ export default function Cart() {
   const handleQuantityChange = async (id, action) => {
     try {
       const item = cartItems.find((i) => i.id === id);
-      const newQty = action === 'increase' ? item.quantity + 1 : item.quantity - 1;
+      const newQty =
+        action === 'increase' ? item.quantity + 1 : item.quantity - 1;
 
       if (newQty <= 0) return handleRemove(id);
 
@@ -47,7 +48,18 @@ export default function Cart() {
     }
   };
 
-  
+  const handleCheckout = async () => {
+    try {
+      const res = await axiosInstance.get('/orders/shipping/');
+      if (res.data && res.data.address) {
+        navigate('/checkout');
+      } else {
+        navigate('/shippingaddress');
+      }
+    } catch {
+      navigate('/shippingaddress');
+    }
+  };
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.product.price * item.quantity,
@@ -59,7 +71,9 @@ export default function Cart() {
       <Navbar />
       <section className="py-12 bg-gray-50 min-h-screen">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-2xl font-bold text-gray-800 mb-8">Shopping Cart</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-8">
+            Shopping Cart
+          </h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
@@ -67,8 +81,12 @@ export default function Cart() {
               {cartItems.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl shadow">
                   <div className="text-6xl mb-4">🛍️</div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">Your cart is empty</h3>
-                  <p className="text-gray-500 mb-6">Looks like you haven’t added anything yet.</p>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    Your cart is empty
+                  </h3>
+                  <p className="text-gray-500 mb-6">
+                    Looks like you haven’t added anything yet.
+                  </p>
                   <button
                     onClick={() => navigate('/products')}
                     className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-lg hover:opacity-90 shadow-lg transition"
@@ -94,23 +112,35 @@ export default function Cart() {
                     {/* Details */}
                     <div className="flex flex-col justify-between p-4 flex-1">
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">{item.product.name}</h3>
-                        <p className="text-sm text-gray-500 mt-1">Delivery by Fri Aug 15</p>
-                        <p className="text-base font-medium text-rose-500 mt-2">₹{item.product.price}</p>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {item.product.name}
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-1">
+                          Delivery by Fri Aug 15
+                        </p>
+                        <p className="text-base font-medium text-rose-500 mt-2">
+                          ₹{item.product.price}
+                        </p>
                       </div>
 
                       {/* Controls */}
                       <div className="flex items-center justify-between mt-4">
                         <div className="flex items-center border border-rose-300 rounded-lg overflow-hidden">
                           <button
-                            onClick={() => handleQuantityChange(item.id, 'decrease')}
+                            onClick={() =>
+                              handleQuantityChange(item.id, 'decrease')
+                            }
                             className="px-3 py-1 text-rose-500 font-bold hover:bg-rose-50"
                           >
                             −
                           </button>
-                          <span className="px-4 py-1 text-gray-800 bg-white">{item.quantity}</span>
+                          <span className="px-4 py-1 text-gray-800 bg-white">
+                            {item.quantity}
+                          </span>
                           <button
-                            onClick={() => handleQuantityChange(item.id, 'increase')}
+                            onClick={() =>
+                              handleQuantityChange(item.id, 'increase')
+                            }
                             className="px-3 py-1 text-rose-500 font-bold hover:bg-rose-50"
                           >
                             +
@@ -125,9 +155,8 @@ export default function Cart() {
                         </button>
                       </div>
 
-
                       <button
-                        onClick={() => navigate('/shippingaddress')}
+                        onClick={handleCheckout}
                         className="mt-6 w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg hover:opacity-90 shadow-md font-medium"
                       >
                         Proceed to Checkout
@@ -141,7 +170,9 @@ export default function Cart() {
             {/* Order Summary */}
             {cartItems.length > 0 && (
               <div className="bg-white rounded-xl shadow-lg p-6 sticky top-24 self-start border border-gray-100">
-                <h3 className="text-xl font-semibold text-gray-800 mb-5">Order Summary</h3>
+                <h3 className="text-xl font-semibold text-gray-800 mb-5">
+                  Order Summary
+                </h3>
 
                 <div className="space-y-3">
                   <div className="flex justify-between text-gray-600">
@@ -154,21 +185,27 @@ export default function Cart() {
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Total Items</span>
-                    <span>{cartItems.reduce((total, item) => total + item.quantity, 0)}</span>
+                    <span>
+                      {cartItems.reduce(
+                        (total, item) => total + item.quantity,
+                        0
+                      )}
+                    </span>
                   </div>
                 </div>
 
                 <hr className="my-4 border-gray-200" />
 
                 <div className="flex justify-between items-center">
-                  <span className="text-lg font-semibold text-gray-800">Total</span>
+                  <span className="text-lg font-semibold text-gray-800">
+                    Total
+                  </span>
                   <span className="text-lg font-bold bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
                     ₹{totalPrice}
                   </span>
                 </div>
               </div>
             )}
-
           </div>
         </div>
       </section>

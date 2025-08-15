@@ -65,6 +65,7 @@ const App = () => {
             <Route path='/orders' element={<Orders />} />
             <Route path='/shippingaddress' element={< ShippingAddressForm/>} />
             <Route path="/checkout" element={<Checkout />} />
+            
 
 
             <Route path='/changepassword' element={< ChangePassword />} />
