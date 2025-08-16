@@ -81,10 +81,19 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',  # Can later switch to PostgreSQL for production
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'stylenestdb',
+        'USER': 'stylenestuser',
+        'PASSWORD': 'stylenest',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
+
+
+
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [

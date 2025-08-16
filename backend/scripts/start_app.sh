@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-PROJECT_MAIN_DIR_NAME="django-aws-ec2-autoscaling"
+PROJECT_MAIN_DIR_NAME="stylenest"
 
 # Validate variables
 if [ -z "$PROJECT_MAIN_DIR_NAME" ]; then
@@ -26,5 +26,6 @@ python manage.py collectstatic --noinput
 # Restart Gunicorn services
 echo "Restarting Gunicorn and Nginx services..."
 sudo service gunicorn restart
+sudo service nginx restart
 
 echo "Application started successfully."
