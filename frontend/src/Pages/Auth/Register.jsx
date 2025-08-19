@@ -4,7 +4,6 @@ import axiosInstance from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -41,9 +40,9 @@ export default function RegisterPage() {
         password: formData.password,
       });
 
-      if (response.status === 201) {
+      // ✅ Accept any success response (200, 201, 204)
+      if (response.status >= 200 && response.status < 300) {
         toast.success('Account created successfully!');
-
         setFormData({ username: '', email: '', password: '', confirmPassword: '' });
         setError('');
         navigate('/login');
@@ -61,7 +60,10 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-100 flex items-center justify-center p-4">
-      <form onSubmit={handleSubmit} className="w-full max-w-md bg-white rounded-2xl shadow-md p-8 space-y-6">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-md bg-white rounded-2xl shadow-md p-8 space-y-6"
+      >
         <h2 className="text-2xl font-bold text-center text-gray-800">Create account</h2>
         <p className="text-sm text-center text-gray-500">Join us and start your journey today</p>
 
@@ -74,6 +76,7 @@ export default function RegisterPage() {
             value={formData.username}
             onChange={handleChange}
             placeholder="Full Name"
+            required
             className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
           />
         </div>
@@ -87,6 +90,7 @@ export default function RegisterPage() {
             value={formData.email}
             onChange={handleChange}
             placeholder="Email Address"
+            required
             className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
           />
         </div>
@@ -100,6 +104,7 @@ export default function RegisterPage() {
             value={formData.password}
             onChange={handleChange}
             placeholder="Password"
+            required
             className="w-full pl-10 pr-10 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
           />
           <button
@@ -120,6 +125,7 @@ export default function RegisterPage() {
             value={formData.confirmPassword}
             onChange={handleChange}
             placeholder="Confirm Password"
+            required
             className="w-full pl-10 pr-10 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
           />
           <button
