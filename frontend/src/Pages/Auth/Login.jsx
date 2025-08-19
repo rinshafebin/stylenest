@@ -20,14 +20,11 @@ export const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.post('auth/login/', {
-        email,
-        password,
-      });
+      const response = await axiosInstance.post('auth/login/', { email, password });
       const { access, refresh, user } = response.data;
       login(access, refresh, user);
 
-      toast.success("Login successfully")
+      toast.success("Login successfully");
       if (user.is_superuser) {
         navigate("/adminpanel");
       } else {
@@ -40,8 +37,7 @@ export const Login = () => {
         const data = err.response.data;
         if (typeof data.detail === "string") {
           setError(data.detail);
-        }
-        else {
+        } else {
           const firstKey = Object.keys(data)[0];
           setError(Array.isArray(data[firstKey]) ? data[firstKey][0] : data[firstKey]);
         }
@@ -108,7 +104,6 @@ export const Login = () => {
             </div>
 
             <div className="flex items-center justify-between">
-              <div></div>
               <button
                 type="button"
                 onClick={() => navigate('/forgetpassword')}
@@ -126,7 +121,11 @@ export const Login = () => {
             >
               <div className="flex items-center justify-center space-x-2">
                 <span>{loading ? 'Signing in...' : 'Sign In'}</span>
-                {!loading && <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />}
+                {!loading && (
+                  <span>
+                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                )}
               </div>
             </button>
 
