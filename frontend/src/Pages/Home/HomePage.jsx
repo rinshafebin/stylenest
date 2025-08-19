@@ -5,11 +5,12 @@ import Navbar from '../../Components/Common/Navbar';
 import Footer from '../../Components/Common/Footer';
 
 import women from '../../Assets/women.jpg';
-import men from '../../assets/men.jpg';
-import kids from '../../assets/kids.jpg';
+import men from '../../Assets/men.jpg';
+import kids from '../../Assets/kids.jpg';
 import hero1 from '../../Assets/hero1.jpg';
 import hero2 from '../../Assets/hero2.jpg';
 import hero3 from '../../Assets/hero3.jpg';
+
 
 export default function Homepage() {
   const images = [hero1, hero2, hero3];
