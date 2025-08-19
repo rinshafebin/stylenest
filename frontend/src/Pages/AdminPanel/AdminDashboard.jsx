@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Header from "../../Components/Admin/Header"
 import Sidebar from "../../Components/Admin/Sidebar";
-import StatsCard from "../../components/Admin/StatsCard";
+import StatsCard from "../../Components/Admin/StatsCard";
 import { ShoppingBag, Users, DollarSign, Star } from "lucide-react";
 
 export default function AdminDashboard() {
