@@ -24,6 +24,7 @@ class OrderSerializer(serializers.ModelSerializer):
         ]
 
 # ------------------ Shipping Address Serializer -------------------------------------
+
 class ShippingAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShippingAddress
