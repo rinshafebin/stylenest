@@ -1,0 +1,66 @@
+# === Python / Django ===
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+
+# Virtual environments
+venv/
+env/
+.venv/
+.Python
+
+# Django static/media (use storage like S3, not Git)
+media/
+static/
+
+# === Node / React (Vite) ===
+node_modules/
+dist/
+build/
+*.log
+
+# === Environment & secrets ===
+.env
+*.pem
+*.key
+*.crt
+
+# Local settings / OS files
+.DS_Store
+Thumbs.db
+
+# IDE / editor settings
+.vscode/
+.idea/
+*.swp
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# React / Vite
+dist/
+build/
+
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+
+# Django
+*.sqlite3
+db.sqlite3
+
+# Environment files
+.env
+frontend/.env
+backend/.env
