@@ -14,7 +14,7 @@ from Auth.serializers import (
 )
 
 
-# ----------------user registration ---------------------
+
 
 class UserRegistration(APIView):
     permission_classes = [AllowAny]
