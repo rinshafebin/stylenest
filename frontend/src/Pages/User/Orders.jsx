@@ -8,6 +8,7 @@ import {
   Loader2,
   ShoppingBag,
 } from 'lucide-react';
+import {Link} from 'react-router-dom'
 import axiosInstance from '../../api/axios';
 
 const Orders = () => {
@@ -38,9 +39,8 @@ const Orders = () => {
 
     return (
       <span
-        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${
-          statusStyles[status] || 'bg-gray-100 text-gray-800 border-gray-200'
-        }`}
+        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${statusStyles[status] || 'bg-gray-100 text-gray-800 border-gray-200'
+          }`}
       >
         {status}
       </span>
@@ -77,9 +77,12 @@ const Orders = () => {
                 <p className="text-gray-600 mb-6">
                   Start shopping to see your orders here. Your order history will appear once you make your first purchase.
                 </p>
-                <button className="bg-rose-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-rose-700 transition-colors">
-                  Start Shopping
-                </button>
+                <Link to={'/products'}>
+                  <button className="bg-rose-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-rose-700 transition-colors">
+                    Start Shopping
+                  </button>
+                </Link>
+
               </div>
             </div>
           </div>
