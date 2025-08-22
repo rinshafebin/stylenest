@@ -143,7 +143,7 @@ const Navbar = () => {
             <div className="relative">
               <ShoppingBag className="w-5 h-5 text-black hover:text-rose-700" />
               <span className="absolute -top-2 -right-2 bg-rose-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                3
+                0
               </span>
             </div>
           </Link>
