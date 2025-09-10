@@ -17,6 +17,6 @@ Frontend is live here: [https://stylnest.netlify.app](https://stylnest.netlify.a
 
 - **Backend Framework**: Django / Django REST Framework
 - **Database**: PostgreSQL 
-- **Authentication**: JWT
+- **Authentication**: JWT AUTH
 - **API Testing**: Postman
 
