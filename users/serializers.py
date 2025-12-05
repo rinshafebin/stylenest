@@ -147,4 +147,10 @@ class PasswordResetSerializer(serializers.Serializer):
         user.save()
         return user
 
-# ----------------------------------- ------------------------------
+# ----------------------------------- ViewAllUsersSerializer ------------------------------
+
+
+class ViewAllUsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'email', 'is_superuser', 'phone_number', 'address', 'is_active']

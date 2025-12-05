@@ -3,13 +3,23 @@ from products.views import (
     Products,
     ProductDetails,
     ViewProductsByCategory,
-    Search_products
+    SearchProducts,
+    AllProducts,
+    CreateProduct,
+    ProductUpdate,
+    ProductDelete,
 )
 
 urlpatterns = [
-    path('search/', Search_products.as_view(), name='search-products'),
-    path('allproducts/',Products.as_view(),name='products'),
-    path('getproduct/<int:pk>/',ProductDetails.as_view(),name='productdetail'),
-    path('productbycategory/<str:category>/',ViewProductsByCategory.as_view(),name='productdetailbycategory'),
+    # ---------- PUBLIC APIs ----------
+    path('list/', Products.as_view(), name='public-products-list'),
+    path('<int:pk>/', ProductDetails.as_view(), name='public-product-detail'),
+    path('category/<str:category>/', ViewProductsByCategory.as_view(), name='public-products-by-category'),
+    path('search/', SearchProducts.as_view(), name='public-search-products'),
 
+    # ---------- ADMIN CRUD APIs ----------
+    path('admin/all/', AllProducts.as_view(), name='admin-products-list'),
+    path('admin/create/', CreateProduct.as_view(), name='admin-create-product'),
+    path('admin/<int:pk>/update/', ProductUpdate.as_view(), name='admin-product-update'),
+    path('admin/<int:pk>/delete/', ProductDelete.as_view(), name='admin-product-delete'),
 ]

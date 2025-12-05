@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -14,6 +14,7 @@ from users.serializers import (
     LoginSerializer,
     ChangePasswordSerializer,
     UserSerializer,
+    ViewAllUsersSerializer,  # make sure you have this serializer
     PasswordResetRequestSerializer,
     OTPVerificationSerializer,
     PasswordResetSerializer
@@ -22,7 +23,6 @@ from users.models import CustomUser
 
 
 # ------------------------- Registration ---------------------
-
 class UserRegistration(APIView):
     permission_classes = [AllowAny]
 
@@ -38,7 +38,6 @@ class UserRegistration(APIView):
 
 
 # ------------------------- Login ----------------------------
-
 class Login(APIView):
     permission_classes = [AllowAny]
 
@@ -60,7 +59,6 @@ class Login(APIView):
 
 
 # ------------------------- Change Password ---------------------
-
 class ChangePassword(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -89,7 +87,6 @@ class ChangePassword(APIView):
 
 
 # ------------------------- Password Reset (Send OTP) ---------------------
-
 class PasswordResetRequest(APIView):
     permission_classes = [AllowAny]
 
@@ -104,7 +101,6 @@ class PasswordResetRequest(APIView):
 
 
 # ------------------------- OTP Verification ---------------------
-
 class OTPVerificationView(APIView):
     permission_classes = [AllowAny]
 
@@ -119,7 +115,6 @@ class OTPVerificationView(APIView):
 
 
 # ------------------------- Password Reset (Using OTP) ---------------------
-
 class PasswordResetView(APIView):
     permission_classes = [AllowAny]
 
@@ -135,7 +130,6 @@ class PasswordResetView(APIView):
 
 
 # ------------------------- Logout ---------------------
-
 class Logout(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -157,7 +151,6 @@ class Logout(APIView):
 
 
 # ------------------------- Email Verification ---------------------
-
 class EmailVerify(APIView):
     permission_classes = [AllowAny]
 
@@ -180,3 +173,22 @@ class EmailVerify(APIView):
             {"error": "Invalid or expired token"},
             status=status.HTTP_400_BAD_REQUEST
         )
+
+
+# ------------------------- Admin User Views ---------------------
+class ViewAllUsers(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        users = CustomUser.objects.filter(is_superuser=False)
+        serializer = ViewAllUsersSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserDetail(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, pk):
+        user = get_object_or_404(CustomUser, pk=pk)
+        serializer = ViewAllUsersSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
