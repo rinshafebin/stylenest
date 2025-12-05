@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.mail import send_mail, BadHeaderError
 from django.utils import timezone
-from Auth.models import CustomUser
+from users.models import CustomUser
 
 
 class UserSerializer(serializers.ModelSerializer):

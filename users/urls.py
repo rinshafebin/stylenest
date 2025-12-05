@@ -1,5 +1,5 @@
 from django.urls import path
-from Auth.views import (
+from users.views import (
     UserRegistration,
     Login,
     ChangePassword,
