@@ -31,11 +31,11 @@ def upload_image_to_s3(image_file, image_name):
             image_name,
             ExtraArgs={
                 "ContentType": content_type,
-                "ACL": "public-read"   # ✅ makes image accessible in browser
+                "ACL": "public-read"  
             },
         )
 
-        # ✅ Always return proper URL
+
         return f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/{image_name}"
 
     except NoCredentialsError:
