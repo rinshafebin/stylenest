@@ -1,17 +1,17 @@
 from django.urls import path
 from .views import (
     CreateOrderAPIView,
+    OrderSummaryAPIView,
     VerifyPaymentAPIView,
     UserOrdersAPIView,
     OrderDetailAPIView,
     AdminOrderListAPIView,
     ShippingAddressListCreateView,
     ShippingAddressDetailView,
-    test_razorpay
 )
 
 urlpatterns = [
-    path("test-razorpay/", test_razorpay),
+    path('summary/', OrderSummaryAPIView.as_view(), name='order-summary'),
     path("create/", CreateOrderAPIView.as_view(), name="create-order"),
     path("verify-payment/", VerifyPaymentAPIView.as_view(), name="verify-payment"),
     path("user-orders/", UserOrdersAPIView.as_view(), name="user-orders"),

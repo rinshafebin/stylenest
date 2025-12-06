@@ -151,6 +151,10 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
@@ -175,7 +179,7 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")
 
-
+CORS_ALLOW_CREDENTIALS = True
 
 
 # AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")

@@ -10,6 +10,8 @@ from users.pagination import StandardResultsSetPagination
 
 from products.models import Product
 from products.serializers import ProductSerializer
+from django.db import IntegrityError
+
 
 
 # ------------------------- Pagination -------------------------
@@ -122,10 +124,29 @@ class ProductUpdate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
 class ProductDelete(APIView):
     permission_classes = [IsAdminUser]
 
     def delete(self, request, pk):
-        product = get_object_or_404(Product, pk=pk)
-        product.delete()
-        return Response({'detail': 'Product deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        try:
+            product = Product.objects.get(pk=pk)
+            if not product.is_active:
+                return Response(
+                    {"detail": "Product is already inactive."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            product.is_active = False  # Soft delete
+            product.save()
+
+            return Response(
+                {"detail": "Product has been removed (soft deleted)."},
+                status=status.HTTP_200_OK
+            )
+        except Product.DoesNotExist:
+            return Response(
+                {"detail": "Product not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )

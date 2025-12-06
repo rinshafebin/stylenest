@@ -8,3 +8,4 @@ urlpatterns = [
     path('<int:pk>/remove/', RemoveCartItemView.as_view(), name='cart-remove'),
     path('wishlist/', WishlistView.as_view(), name='wishlist'),
 ]
+ 

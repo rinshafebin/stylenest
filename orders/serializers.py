@@ -84,3 +84,18 @@ class OrderSerializer(serializers.ModelSerializer):
         OrderItem.objects.bulk_create(order_items)
 
         return order
+
+
+
+class OrderSummaryCartItemSerializer(serializers.ModelSerializer):
+    product_name = serializers.CharField(source='product.name', read_only=True)
+    price = serializers.DecimalField(source='product.price', max_digits=10, decimal_places=2, read_only=True)
+
+    class Meta:
+        model = CartItem
+        fields = ['id', 'product_name', 'quantity', 'price']
+
+class OrderSummarySerializer(serializers.Serializer):
+    items = OrderSummaryCartItemSerializer(many=True)
+    total_amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+    shipping_addresses = serializers.ListField()

@@ -2,6 +2,7 @@ from rest_framework import serializers
 from products.models import Product
 
 class ProductSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=True)
     category = serializers.ChoiceField(choices=Product.CATEGORY_CHOICES)
 
     class Meta:

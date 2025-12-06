@@ -11,9 +11,8 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Order, ShippingAddress
-from .serializers import OrderSerializer, ShippingAddressSerializer
+from .serializers import OrderSerializer, ShippingAddressSerializer,OrderSummaryCartItemSerializer
 from cart.models import CartItem  
-from django.http import JsonResponse
 
 
 logger = logging.getLogger(__name__)
@@ -138,6 +137,36 @@ class VerifyPaymentAPIView(APIView):
 
 
 # ------------------- User Order Views -------------------
+
+class OrderSummaryAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Fetch cart items
+        cart_items = CartItem.objects.filter(user=request.user)
+        if not cart_items.exists():
+            return Response({"status": "error", "message": "Cart is empty"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Calculate total
+        total_amount = sum(item.product.price * item.quantity for item in cart_items)
+
+        # Serialize cart items
+        items_serializer = OrderSummaryCartItemSerializer(cart_items, many=True)
+
+        # Get user's shipping addresses
+        addresses = ShippingAddress.objects.filter(user=request.user)
+        addresses_serializer = ShippingAddressSerializer(addresses, many=True)
+
+        return Response({
+            "status": "success",
+            "items": items_serializer.data,
+            "total_amount": total_amount,
+            "shipping_addresses": addresses_serializer.data
+        })
+
+
+
+
 class UserOrdersAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -166,18 +195,3 @@ class AdminOrderListAPIView(APIView):
         return Response(serializer.data)
 
 
-
-
-
-
-def test_razorpay(request):
-    # Create Razorpay client
-    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-    try:
-        # Fetch a list of orders (just to check if auth works)
-        orders = client.order.all()
-        return JsonResponse({"status": "success", "orders": orders})
-    except razorpay.errors.ServerError as e:
-        return JsonResponse({"status": "error", "error": str(e)})
-    except razorpay.errors.AuthenticationError as e:
-        return JsonResponse({"status": "error", "error": "Authentication failed"})
