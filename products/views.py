@@ -111,7 +111,7 @@ class CreateProduct(APIView):
 
 class ProductUpdate(APIView):
     permission_classes = [IsAdminUser]
-    parser_classes = [MultiPartParser, FormParser]
+    parser_classes = [JSONParser, MultiPartParser, FormParser]
 
     def patch(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
