@@ -3,23 +3,26 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from cart.models import CartItem
 
 from django.shortcuts import get_object_or_404
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
+from users.models import CustomUser
 
 from users.serializers import (
     UserRegistrationSerializer,
     LoginSerializer,
     ChangePasswordSerializer,
     UserSerializer,
-    ViewAllUsersSerializer,  # make sure you have this serializer
-    PasswordResetRequestSerializer,
-    OTPVerificationSerializer,
-    PasswordResetSerializer
+    ViewAllUsersSerializer,  
 )
-from users.models import CustomUser
+from django.core.mail import send_mail, BadHeaderError
+from django.utils import timezone
+from django.contrib.auth.password_validation import validate_password
+import random
+from datetime import timedelta
 
 
 # ------------------------- Registration ---------------------
@@ -48,14 +51,18 @@ class Login(APIView):
             refresh = RefreshToken.for_user(user)
             user_data = UserSerializer(user).data
 
+            cart_count = CartItem.objects.filter(user=user).count()
+
             return Response({
                 "message": "Login successful",
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
-                "user": user_data
+                "user": user_data,
+                "cart_count": cart_count,  # ← ADD THIS
             }, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 # ------------------------- Change Password ---------------------
@@ -86,18 +93,42 @@ class ChangePassword(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# ------------------------- Password Reset (Send OTP) ---------------------
+
+
+# ------------------------- Password Reset Request ---------------------
 class PasswordResetRequest(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = PasswordResetRequestSerializer(data=request.data)
-        if serializer.is_valid():
-            return Response(
-                {"message": "OTP sent successfully"},
-                status=status.HTTP_200_OK
+        email = request.data.get('email')
+        if not email:
+            return Response({"email": "This field is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            return Response({"email": "User with this email does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Generate OTP
+        user.otp = random.randint(100000, 999999)
+        user.otp_expiration = timezone.now() + timedelta(minutes=5)
+        user.otp_verified = False
+        user.save()
+
+        try:
+            send_mail(
+                subject="Password Reset OTP",
+                message=f"Your OTP for password reset is: {user.otp}",
+                from_email=None,  # will use DEFAULT_FROM_EMAIL
+                recipient_list=[user.email],
+                fail_silently=False,
             )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except BadHeaderError:
+            return Response({"error": "Invalid email header."}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": f"Failed to send email: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({"message": "OTP sent successfully."}, status=status.HTTP_200_OK)
 
 
 # ------------------------- OTP Verification ---------------------
@@ -105,28 +136,64 @@ class OTPVerificationView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = OTPVerificationSerializer(data=request.data)
-        if serializer.is_valid():
-            return Response(
-                {"message": "OTP verified successfully"},
-                status=status.HTTP_200_OK
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        email = request.data.get('email')
+        otp = request.data.get('otp')
+
+        if not email or not otp:
+            return Response({"error": "Email and OTP are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            return Response({"email": "User not found."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if str(user.otp) != str(otp):
+            return Response({"otp": "Invalid OTP."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if timezone.now() >= user.otp_expiration:
+            return Response({"otp": "OTP has expired."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.otp_verified = True
+        user.save()
+        return Response({"message": "OTP verified successfully."}, status=status.HTTP_200_OK)
 
 
-# ------------------------- Password Reset (Using OTP) ---------------------
+# ------------------------- Password Reset ---------------------
 class PasswordResetView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = PasswordResetSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(
-                {"message": "Password reset successful"},
-                status=status.HTTP_200_OK
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        email = request.data.get('email')
+        password = request.data.get('password')
+        confirm_password = request.data.get('confirm_password')
+
+        if not email or not password or not confirm_password:
+            return Response({"error": "All fields are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if password != confirm_password:
+            return Response({"error": "Passwords do not match."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            return Response({"email": "User not found."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not user.otp_verified:
+            return Response({"otp": "OTP verification required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            validate_password(password)
+        except Exception as e:
+            return Response({"password": list(e.messages)}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Save new password and reset OTP
+        user.set_password(password)
+        user.otp_verified = False
+        user.otp = None
+        user.otp_expiration = None
+        user.save()
+
+        return Response({"message": "Password reset successful."}, status=status.HTTP_200_OK)
 
 
 # ------------------------- Logout ---------------------
