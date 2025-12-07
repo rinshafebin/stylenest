@@ -87,13 +87,16 @@ class RemoveCartItemView(APIView):
 
 
 
-class WishlistView(APIView):
+class WishlistListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         wishlist_items = WishlistItem.objects.filter(user=request.user)
         serializer = WishlistItemSerializer(wishlist_items, many=True)
         return Response({"wishlist": serializer.data})
+    
+class WishlistAddView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         product_id = request.data.get("product_id")
@@ -111,14 +114,14 @@ class WishlistView(APIView):
         
         serializer = WishlistItemSerializer(wishlist_item)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
 
-    def delete(self, request):
-        product_id = request.data.get("product_id")
-        if not product_id:
-            return Response({"error": "Product ID is required"}, status=status.HTTP_400_BAD_REQUEST)
-        
+class WishlistDeleteView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, item_id):
         try:
-            wishlist_item = WishlistItem.objects.get(user=request.user, product_id=product_id)
+            wishlist_item = WishlistItem.objects.get(id=item_id, user=request.user)
             wishlist_item.delete()
             return Response({"message": "Product removed from wishlist"})
         except WishlistItem.DoesNotExist:
