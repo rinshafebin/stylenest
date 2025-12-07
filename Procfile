@@ -1,1 +1,1 @@
-web: gunicorn my_ecommerce_project.wsgi
+web: gunicorn stylenest_backend.wsgi
