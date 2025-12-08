@@ -20,6 +20,6 @@ urlpatterns = [
     # ---------- ADMIN CRUD APIs ----------
     path('admin/all/', AllProducts.as_view(), name='admin-products-list'),
     path('admin/create/', CreateProduct.as_view(), name='admin-create-product'),
-    path('admin/<int:pk>/update/', ProductUpdate.as_view(), name='admin-product-update'),
-    path('admin/<int:pk>/delete/', ProductDelete.as_view(), name='admin-product-delete'),
+    path('admin/update/<int:pk>/', ProductUpdate.as_view(), name='admin-product-update'),
+    path("admin/delete/<int:pk>/", ProductDelete.as_view(), name="product-delete"),
 ]

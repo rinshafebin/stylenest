@@ -125,26 +125,20 @@ class ProductUpdate(APIView):
 
 
 
-
 class ProductDelete(APIView):
     permission_classes = [IsAdminUser]
 
     def delete(self, request, pk):
         try:
             product = Product.objects.get(pk=pk)
-            if not product.is_active:
-                return Response(
-                    {"detail": "Product is already inactive."},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
 
-            product.is_active = False  # Soft delete
-            product.save()
+            product.delete()
 
             return Response(
-                {"detail": "Product has been removed (soft deleted)."},
-                status=status.HTTP_200_OK
+                {"detail": "Product deleted successfully."},
+                status=status.HTTP_204_NO_CONTENT
             )
+
         except Product.DoesNotExist:
             return Response(
                 {"detail": "Product not found."},
