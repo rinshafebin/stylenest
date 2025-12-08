@@ -2,13 +2,22 @@ from rest_framework import serializers
 from products.models import Product
 
 class ProductSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(use_url=True)
+    image = serializers.SerializerMethodField()
     category = serializers.ChoiceField(choices=Product.CATEGORY_CHOICES)
 
     class Meta:
         model = Product
         fields = '__all__'
         read_only_fields = ['created_at', 'updated_at', 'slug']
+
+    # Return full Cloudinary URL
+    def get_image(self, obj):
+        if obj.image:
+            try:
+                return obj.image.url
+            except ValueError:
+                return None
+        return None
 
     # Validations
     def validate_name(self, value):
