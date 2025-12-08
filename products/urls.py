@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/create/', CreateProduct.as_view(), name='admin-create-product'),
     path('admin/update/<int:pk>/', ProductUpdate.as_view(), name='admin-product-update'),
     path("admin/delete/<int:pk>/", ProductDelete.as_view(), name="product-delete"),
+    
 ]

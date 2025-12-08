@@ -122,6 +122,12 @@ class ProductUpdate(APIView):
             updated_product = serializer.save()
             return Response(ProductSerializer(updated_product).data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    def get(self, request, pk):
+            product = get_object_or_404(Product, pk=pk)
+            serializer = ProductSerializer(product)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 
