@@ -14,6 +14,11 @@ class ProductAdmin(admin.ModelAdmin):
     # Show thumbnail in admin
     def image_tag(self, obj):
         if obj.image:
-            return format_html('<img src="{}" width="50" height="50" />'.format(obj.image.url))
+            # Force Cloudinary to deliver JPG or PNG compatible format
+            url = obj.image.url
+            # add f_auto,q_auto for browser compatibility
+            if "res.cloudinary.com" in url:
+                url = url.replace("/upload/", "/upload/f_auto,q_auto/")
+            return format_html('<img src="{}" width="50" height="50" />'.format(url))
         return "-"
     image_tag.short_description = 'Image'
