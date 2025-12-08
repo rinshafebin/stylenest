@@ -2,22 +2,13 @@ from rest_framework import serializers
 from products.models import Product
 
 class ProductSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
+
     category = serializers.ChoiceField(choices=Product.CATEGORY_CHOICES)
 
     class Meta:
         model = Product
         fields = '__all__'
         read_only_fields = ['created_at', 'updated_at', 'slug']
-
-    # Return full Cloudinary URL
-    def get_image(self, obj):
-        if obj.image:
-            try:
-                return obj.image.url
-            except ValueError:
-                return None
-        return None
 
     # Validations
     def validate_name(self, value):
@@ -33,4 +24,9 @@ class ProductSerializer(serializers.ModelSerializer):
     def validate_stock(self, value):
         if value < 0:
             raise serializers.ValidationError("Stock cannot be negative.")
+        return value
+
+    def validate_image_url(self, value):
+        if value and not value.startswith("http"):
+            raise serializers.ValidationError("Image URL must be a valid URL.")
         return value
