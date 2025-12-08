@@ -159,10 +159,10 @@ RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
 # AWS_QUERYSTRING_AUTH = False
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-# CSRF_TRUSTED_ORIGINS = [
-#     "https://stylenest.up.railway.app",
-#     "https://stylnest.netlify.app",
-# ]
+CSRF_TRUSTED_ORIGINS = [
+    "https://stylenest.up.railway.app",
+    "https://stylnest.netlify.app",
+]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://stylnest.netlify.app",
