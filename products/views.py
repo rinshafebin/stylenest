@@ -77,15 +77,20 @@ class SearchProducts(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        query = request.GET.get('q')
-        if not query:
-            return Response({"error": "Search query not provided"}, status=status.HTTP_400_BAD_REQUEST)
+        query = request.GET.get('q', '').strip()
 
-        products = Product.objects.filter(
-            Q(name__icontains=query) | Q(description__icontains=query)
-        )
+        if not query:
+            products = Product.objects.all().order_by('-created_at')[:10]
+        else:
+            products = Product.objects.filter(
+                Q(name__icontains=query) | Q(description__icontains=query)
+            )
+
         serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
+        return Response({
+            "count": products.count(),
+            "results": serializer.data
+        }, status=status.HTTP_200_OK)
 
 
 # ------------------------- ADMIN CRUD APIs -------------------------
