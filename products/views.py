@@ -104,7 +104,6 @@ class CreateProduct(APIView):
     parser_classes = [JSONParser, MultiPartParser, FormParser]
 
     def post(self, request):
-        print("REQUEST DATA:", request.data)
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             product = serializer.save()

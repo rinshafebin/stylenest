@@ -21,7 +21,6 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-created_at'] 
         indexes = [
             models.Index(fields=['name']),
             models.Index(fields=['slug']),
