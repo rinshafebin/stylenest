@@ -19,8 +19,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", "your-default-secret-key")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = [
-    "stylenest.up.railway.app",
+ALLOWED_HOSTS = [  # ← FIXED: Removed extra 'A'
+    ".vercel.app",
     "localhost",
     "127.0.0.1",
 ]
@@ -86,8 +86,9 @@ WSGI_APPLICATION = 'stylenest_backend.wsgi.application'
 # Database (Railway PostgreSQL)
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
+        default=os.environ.get('DATABASE_URL'),
         conn_max_age=600,
+        ssl_require=True
     )
 }
 
@@ -105,9 +106,19 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# CORS
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS Configuration
+CORS_ALLOWED_ORIGINS = [
+    "https://stylnest.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:5173",
+]
 CORS_ALLOW_CREDENTIALS = True
+
+# CSRF Trusted Origins
+CSRF_TRUSTED_ORIGINS = [
+    "https://stylnest.vercel.app",
+    "https://*.vercel.app",  # ← ADD THIS for backend preview deployments
+]
 
 # Static files
 STATIC_URL = '/static/'
@@ -161,8 +172,9 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
 
-# CSRF Trusted Origins
-CSRF_TRUSTED_ORIGINS = [
-    "https://stylenest.up.railway.app",
-    "https://stylnest.vercel.app",
-]
+# Security headers for production (OPTIONAL but recommended)
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
