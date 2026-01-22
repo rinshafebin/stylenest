@@ -164,5 +164,5 @@ RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
     "https://stylenest.up.railway.app",
-    "https://stylenest-zeta.vercel.app",
+    "https://stylnest.vercel.app",
 ]
