@@ -36,6 +36,7 @@ class AddToCartView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 # ---------------- List Cart Items ----------------
 class CartListView(APIView):
     permission_classes = [IsAuthenticated]
